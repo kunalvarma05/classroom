@@ -35,6 +35,8 @@
 </template>
 
 <script>
+  import Firebase from '../lib/Firebase';
+  import sessionService from '../store/Session';
   import Stream from '../components/classroom/Stream'
   import Slides from '../components/classroom/Slides'
   import Doubts from '../components/classroom/Doubts'
@@ -45,13 +47,32 @@
     data() {
       return {
         drawer: false,
-        activeTab: "stream"
+        activeTab: "stream",
+        course: false
+      }
+    },
+    created() {
+      if (this.userIsTutor) {
+        Firebase.instance().database().ref('courses').child(this.courseTutorId).child(this.courseId).once('value').then((snapshot) => {
+          const course = snapshot.val();
+          this.course = course;
+          sessionService.notifyStudents(this.$currentUser, {
+            id: this.courseId,
+            courseName: course.courseName
+          });
+        });
       }
     },
     computed: {
-      slug() {
-        return this.$route.params.slug;
+      userIsTutor() {
+        return this.$currentUser.id === this.courseTutorId;
       },
+      courseId() {
+        return this.$route.params.course_id;
+      },
+      courseTutorId() {
+        return this.$route.params.tutor_id;
+      }
     },
     methods: {
       tabIsActive(tab) {

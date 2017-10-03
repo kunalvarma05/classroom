@@ -30,6 +30,22 @@
         <router-view></router-view>
       </v-container>
     </main>
+
+    <div v-if="showNotification">
+      <v-snackbar
+        :key="notification.course.id"
+        :timeout="10000"
+        :top="true"
+        v-model="showNotification"
+        :multi-line="true"
+        dark
+      >
+        {{notification.message}}
+        <v-btn @click.native="goToSession" primary>Attend</v-btn>
+        <v-btn flat class="grey--text" @click.native="showNotification = false">Close</v-btn>
+      </v-snackbar>
+    </div>
+
   </v-app>
 </template>
 
@@ -38,10 +54,41 @@
 
   export default {
     name: 'dashboard',
+    created() {
+      if (!this.userIsTutor && this.$router.currentRoute.name !== "classroom") {
+        this.listenToNotifications();
+      }
+    },
     data() {
       return {
-        drawer: false
+        drawer: false,
+        notification: false,
+        showNotification: false
       };
+    },
+    computed: {
+      userIsTutor() {
+        return this.$currentUser.role === "tutor";
+      },
+    },
+    methods: {
+      goToSession() {
+        this.showNotification = false;
+        this.$router.push({
+          name: 'classroom',
+          params: {tutor_id: this.notification.tutor.id, course_id: this.notification.course.id}
+        });
+      },
+      listenToNotifications() {
+        Firebase.instance().database().ref('/notifications').on('child_added', (snapshot) => {
+          const notification = snapshot.val();
+          const course = notification.course;
+          const tutor = notification.tutor;
+
+          this.notification = notification;
+          this.showNotification = true
+        });
+      }
     }
   }
 </script>

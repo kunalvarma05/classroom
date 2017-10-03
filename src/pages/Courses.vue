@@ -16,6 +16,11 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
+
+                <v-btn icon @click="startSession(course.id)" v-if="!course.visible">
+                  <v-icon>launch</v-icon>
+                </v-btn>
+
                 <v-btn icon @click.native='toggleCourseVisible(course)' v-if="!course.visible">
                   <v-icon>edit</v-icon>
                 </v-btn>
@@ -88,6 +93,9 @@
       };
     },
     methods: {
+      startSession(course_id) {
+        this.$router.push({name: 'classroom', params: {tutor_id: this.$currentUser.id, course_id: course_id}});
+      },
       addCourse() {
         Firebase.instance().database().ref('courses').child(this.$currentUser.id).push({
           courseName: this.courseName

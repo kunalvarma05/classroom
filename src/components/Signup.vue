@@ -51,7 +51,7 @@
                 console.log(existingUser);
                 if (existingUser) {
                   this.$auth.setUser(existingUser);
-                  this.$router.push('/dashboard');
+                  this.$router.push({name: 'dashboard'});
                 } else {
                   this.user = user;
                   this.step = 2;
@@ -73,7 +73,7 @@
           .then(() => {
             this.$auth.setUser(user);
             this.inProgress = false;
-            this.$router.push('/dashboard');
+            this.$router.push({name: 'dashboard'});
           })
           .catch(err => {
             console.log(err);

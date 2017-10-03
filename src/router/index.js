@@ -32,17 +32,14 @@ const router = new Router({
           component: DashboardMain
         },
         {
-          path: 'classroom/:slug',
+          path: 'classroom/:tutor_id/:course_id',
           name: 'classroom',
           component: Classroom,
         },
         {
           path: 'courses',
           name: 'courses',
-          component: Courses,
-          meta: {
-            middlewares: ['role:tutor']
-          }
+          component: Courses
         }
       ]
     }

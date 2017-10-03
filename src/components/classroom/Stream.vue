@@ -34,12 +34,11 @@
       return {
         room: false,
         accessToken: false,
-        tutor_id: "TRJsqKtTZoWynelMLqYE3YfEfef2",
         tutorDisconnected: false
       };
     },
     created() {
-      Video.generateAccessToken(this.currentUserId, this.roomName)
+      Video.generateAccessToken(this.currentUserId, this.courseId)
         .then((token) => {
           this.accessToken = token;
         });
@@ -48,11 +47,14 @@
       currentUserId() {
         return this.$currentUser.id;
       },
-      roomName() {
-        return this.$route.params.slug.toString();
+      courseId() {
+        return this.$route.params.course_id;
+      },
+      courseTutorId() {
+        return this.$route.params.tutor_id;
       },
       userIsTutor() {
-        return this.$currentUser.id === this.tutor_id;
+        return this.$currentUser.id === this.courseTutorId;
       },
       sessionStarted() {
         return true;
@@ -69,7 +71,7 @@
       },
       connect() {
         // Only show get video track if it's a tutor
-        return Video.connect(this.accessToken, this.roomName, this.userIsTutor);
+        return Video.connect(this.accessToken, this.courseId, this.userIsTutor);
       },
       attachRoomHandlers(room) {
         room.on('participantConnected', this.remoteParticipantConnected);
@@ -94,14 +96,14 @@
       },
       remoteParticipantDisconnected(participant) {
         // If the participant connected is a tutor
-        if (participant.identity === this.tutor_id) {
+        if (participant.identity === this.courseTutorId) {
           // Remove their video
           this.removeTutorVideo(participant);
         }
       },
       remoteParticipantConnected(participant) {
         // If the participant connected is a tutor
-        if (participant.identity === this.tutor_id) {
+        if (participant.identity === this.courseTutorId) {
           // Show their video
           this.showTutorVideo(participant);
         }
