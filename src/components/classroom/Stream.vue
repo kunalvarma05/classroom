@@ -64,21 +64,19 @@
         room.on('participantConnected', this.remoteParticipantConnected);
       },
       remoteParticipantConnected(participant) {
-        // Gotta wait
-        setTimeout(() => {
+        // If the participant connected is a tutor
+        if (participant.identity === this.tutor_id) {
+          // Show their video
           this.showTutorVideo(participant);
-        }, 500);
-
-//        // If the participant connected is a tutor
-//        if (participant.identity === this.tutor_id) {
-//          // Show it's video
-//          this.showTutorVideo(participant);
-//        }
+        }
       },
       showTutorVideo(participant) {
-        participant.tracks.forEach((track) => {
-          document.getElementById('stream-tracks').appendChild(track.attach());
-        });
+        // Gotta wait for the tracks to be available
+        setTimeout(() => {
+          participant.tracks.forEach((track) => {
+            document.getElementById('stream-tracks').appendChild(track.attach());
+          });
+        }, 500);
       }
     }
   }

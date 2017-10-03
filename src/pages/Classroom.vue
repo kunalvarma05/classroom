@@ -104,4 +104,6 @@
     .toolbar
       .logo
         width: 120px;
+    .container
+      min-height: calc(100vh - 150px)
 </style>
