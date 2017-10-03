@@ -27,7 +27,13 @@
     </v-toolbar>
     <main>
       <v-container fluid>
-        <router-view></router-view>
+
+        <stream v-show="tabIsActive('stream')"></stream>
+        <slides v-show="tabIsActive('slides')"></slides>
+        <whiteboard v-show="tabIsActive('whiteboard')"></whiteboard>
+        <doubts v-show="tabIsActive('doubts')"></doubts>
+
+
       </v-container>
     </main>
     <v-bottom-nav
@@ -35,24 +41,24 @@
       :value="true"
       :active.sync="activeTab"
       :class="{
-        'cyan': activeTab === 0,
-        'blue': activeTab === 1,
-        'pink': activeTab === 2,
-        'blue-grey': activeTab === 3
+        'cyan': tabIsActive('stream'),
+        'blue': tabIsActive('slides'),
+        'pink': tabIsActive('whiteboard'),
+        'blue-grey': tabIsActive('doubts')
       }">
-      <v-btn dark value="classroom-stream">
+      <v-btn dark value="stream">
         <span>Stream</span>
         <v-icon>videocam</v-icon>
       </v-btn>
-      <v-btn dark value="classroom-slides">
+      <v-btn dark value="slides">
         <span>Slides</span>
         <v-icon>slideshow</v-icon>
       </v-btn>
-      <v-btn dark value="classroom-whiteboard">
+      <v-btn dark value="whiteboard">
         <span>Whiteboard</span>
         <v-icon>panorama</v-icon>
       </v-btn>
-      <v-btn dark value="classroom-doubts">
+      <v-btn dark value="doubts">
         <span>Doubts</span>
         <v-icon>insert_comment</v-icon>
       </v-btn>
@@ -61,26 +67,34 @@
 </template>
 
 <script>
+  import Stream from '../components/classroom/Stream'
+  import Slides from '../components/classroom/Slides'
+  import Doubts from '../components/classroom/Doubts'
+  import Whiteboard from '../components/classroom/Whiteboard'
+
   export default {
     name: 'classroom',
     data() {
       return {
         drawer: false,
-        activeTab: "classroom-stream"
+        activeTab: "stream"
       }
     },
     computed: {
       slug() {
         return this.$route.params.slug;
-      }
-    },
-    "watch": {
-      activeTab: 'switchTab'
+      },
     },
     methods: {
-      switchTab(routeName) {
-        this.$router.push({name: routeName, params: {slug: this.slug}});
+      tabIsActive(tab) {
+        return this.activeTab === tab;
       }
+    },
+    components: {
+      Stream,
+      Slides,
+      Doubts,
+      Whiteboard
     }
   }
 </script>
