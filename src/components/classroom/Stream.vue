@@ -2,10 +2,19 @@
   <div class="stream-page">
     <div class="stream-message" v-if="!room">
       <h1>Stream</h1>
-      <v-btn outline round :loading='!accessToken' @click='joinStream' class="cyan--text">
+
+      <v-btn outline round :loading='!accessToken' @click='joinStream'
+             class="cyan--text">
         <v-icon left>videocam</v-icon>
         <span>Join Stream</span>
       </v-btn>
+    </div>
+    <div v-if="tutorDisconnected" class="stream-waiting">
+      <h4>Don't panic kiddos...</h4>
+      <h6>
+        Looks like the Tutor got disconnected. Waiting for the tutor to connect...
+        <v-progress-circular right indeterminate class="grey--text"></v-progress-circular>
+      </h6>
     </div>
 
     <div class="stream-video">
@@ -25,7 +34,8 @@
       return {
         room: false,
         accessToken: false,
-        tutor_id: "TRJsqKtTZoWynelMLqYE3YfEfef2"
+        tutor_id: "TRJsqKtTZoWynelMLqYE3YfEfef2",
+        tutorDisconnected: false
       };
     },
     created() {
@@ -43,10 +53,14 @@
       },
       userIsTutor() {
         return this.$currentUser.id === this.tutor_id;
+      },
+      sessionStarted() {
+        return true;
       }
     },
     methods: {
       joinStream() {
+        // Connect to the Room
         this.connect()
           .then((room) => {
             this.room = room;
@@ -54,14 +68,36 @@
           });
       },
       connect() {
-        // Only show the video if it's a tutor
+        // Only show get video track if it's a tutor
         return Video.connect(this.accessToken, this.roomName, this.userIsTutor);
       },
       attachRoomHandlers(room) {
+        room.on('participantConnected', this.remoteParticipantConnected);
+        room.on('participantDisconnected', this.remoteParticipantDisconnected);
+        room.on('disconnected', this.localParticipantDisConnected);
+
         room.participants.forEach(participant => {
           this.remoteParticipantConnected(participant);
         });
-        room.on('participantConnected', this.remoteParticipantConnected);
+      },
+      localParticipantDisConnected(room) {
+        console.log('disconnected');
+        // Detach the local media elements
+        room.localParticipant.tracks.forEach(function (track) {
+          const attachedElements = track.detach();
+          attachedElements.forEach(function (element) {
+            return element.remove();
+          });
+        });
+
+        this.room = false
+      },
+      remoteParticipantDisconnected(participant) {
+        // If the participant connected is a tutor
+        if (participant.identity === this.tutor_id) {
+          // Remove their video
+          this.removeTutorVideo(participant);
+        }
       },
       remoteParticipantConnected(participant) {
         // If the participant connected is a tutor
@@ -71,12 +107,17 @@
         }
       },
       showTutorVideo(participant) {
+        this.tutorDisconnected = false;
         // Gotta wait for the tracks to be available
         setTimeout(() => {
           participant.tracks.forEach((track) => {
             document.getElementById('stream-tracks').appendChild(track.attach());
           });
         }, 500);
+      },
+      removeTutorVideo(participant) {
+        this.tutorDisconnected = true;
+        document.getElementById('stream-tracks').innerHTML = "";
       }
     }
   }
@@ -86,14 +127,14 @@
   .stream-page
     display: flex;
     align-items: center;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 170px);
 
   .stream-video
-    height: calc(100vh - 150px);
+    height: calc(100vh - 170px);
     margin: auto;
 
     #stream-tracks
-      height: calc(100vh - 150px);
+      height: calc(100vh - 170px);
 
       video
         transform: rotateY(180deg); // Mirror ;)

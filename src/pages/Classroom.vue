@@ -37,7 +37,6 @@
       </v-container>
     </main>
     <v-bottom-nav
-      shift
       :value="true"
       :active.sync="activeTab"
       :class="{
@@ -104,6 +103,16 @@
     .toolbar
       .logo
         width: 120px;
+
     .container
-      min-height: calc(100vh - 150px)
+      min-height: calc(100vh - 170px)
+
+    .bottom-nav
+      height: 80px;
+      .btn
+        .btn__content
+          font-size: 16px;
+
+          span
+            margin-top: 5px;
 </style>
