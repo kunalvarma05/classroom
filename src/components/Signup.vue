@@ -50,9 +50,16 @@
 
         Auth()
           .then(user => {
-            this.step = 2;
-            this.user = user;
-            this.inProgress = false;
+            userService.get(user.id)
+              .then(existingUser => {
+                if (existingUser) {
+                  this.$router.push('/dashboard');
+                } else {
+                  this.user = user;
+                  this.step = 2;
+                  this.inProgress = false;
+                }
+              })
           })
           .catch(err => {
             this.signInFail = true;

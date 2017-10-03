@@ -4,6 +4,9 @@
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
       <img src="../assets/images/logo-blue.svg" :alt="title">
       <signup v-if='!loading' />
+      <div>
+        <v-progress-circular indeterminate class="primary--text" v-if='loading'></v-progress-circular>
+      </div>
     </v-container>
   </div>
 </template>
@@ -33,7 +36,7 @@
 -->
 <style lang="stylus">
   .home-page
-    display: flex;
-    height: 100%;
-    align-items: center;
+    display: flex
+    height: 100%
+    align-items: center
 </style>
