@@ -32,22 +32,19 @@ const router = new Router({
           component: DashboardMain
         },
         {
+          path: 'classroom/:slug',
+          name: 'classroom',
+          component: Classroom,
+        },
+        {
           path: 'courses',
           name: 'courses',
           component: Courses,
           meta: {
-            middlewares: ['auth', 'role:tutor']
+            middlewares: ['role:tutor']
           }
         }
       ]
-    },
-    {
-      path: '/classroom/:slug',
-      name: 'classroom',
-      component: Classroom,
-      meta: {
-        middlewares: ['auth']
-      }
     }
   ]
 });

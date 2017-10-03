@@ -1,41 +1,10 @@
 <template>
   <v-app id="classroom" toolbar dark>
-    <v-navigation-drawer
-      persistent
-      disable-route-watcher
-      v-model="drawer"
-      light
-      absolute
-      dark
-    >
-      <v-list>
-        <v-list-tile @click="">
-          <v-list-tile-action>
-            <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar dark fixed>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <span class="title">
-        <img src="../assets/images/logo.svg" alt="Classroom" class="logo">
-      </span>
-    </v-toolbar>
-    <main>
-      <v-container fluid>
+    <stream v-show="tabIsActive('stream')"></stream>
+    <slides v-show="tabIsActive('slides')"></slides>
+    <whiteboard v-show="tabIsActive('whiteboard')"></whiteboard>
+    <doubts v-show="tabIsActive('doubts')"></doubts>
 
-        <stream v-show="tabIsActive('stream')"></stream>
-        <slides v-show="tabIsActive('slides')"></slides>
-        <whiteboard v-show="tabIsActive('whiteboard')"></whiteboard>
-        <doubts v-show="tabIsActive('doubts')"></doubts>
-
-
-      </v-container>
-    </main>
     <v-bottom-nav
       :value="true"
       :active.sync="activeTab"
@@ -100,15 +69,12 @@
 
 <style lang="stylus">
   #classroom
-    .toolbar
-      .logo
-        width: 120px;
-
     .container
       min-height: calc(100vh - 170px)
 
     .bottom-nav
       height: 80px;
+      left: 0;
       .btn
         .btn__content
           font-size: 16px;

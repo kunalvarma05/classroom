@@ -1,7 +1,36 @@
 <template>
-  <v-container class='dashboard-page'>
-    <router-view></router-view>
-  </v-container>
+  <v-app id="dashboard" class="dashboard-page" toolbar dark>
+    <v-navigation-drawer
+      persistent
+      disable-route-watcher
+      v-model="drawer"
+      light
+      absolute
+      dark
+    >
+      <v-list>
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar dark fixed>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <span class="title">
+        <img src="../assets/images/logo.svg" alt="Classroom" class="logo">
+      </span>
+    </v-toolbar>
+    <main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </main>
+  </v-app>
 </template>
 
 <script>
@@ -9,6 +38,11 @@
 
   export default {
     name: 'dashboard',
+    data() {
+      return {
+        drawer: false
+      };
+    },
     methods: {
       logout() {
         Firebase.instance().auth().signOut();
@@ -25,7 +59,9 @@
 -->
 <style lang="stylus">
   .dashboard-page
-    display: flex;
     height: 100%;
-    align-items: center;
+
+    .toolbar
+      .logo
+        width: 120px;
 </style>
