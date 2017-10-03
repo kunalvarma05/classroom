@@ -1,0 +1,24 @@
+// Nope. Not Roboto. ;)
+$body-font-family = 'Open Sans', sans-serif;
+
+// The Blue. :p
+$blue := {
+  "base":       #fff,
+  "lighten-5":  lighten($blue.base, 50%),
+  "lighten-4":  lighten($blue.base, 40%),
+  "lighten-3":  lighten($blue.base, 30%),
+  "lighten-2":  lighten($blue.base, 20%),
+  "lighten-1":  lighten($blue.base, 10%),
+  "darken-1":   darken($blue.base, 10%),
+  "darken-2":   darken($blue.base, 20%),
+  "darken-3":   darken($blue.base, 30%),
+  "darken-4":   darken($blue.base, 40%),
+  "accent-1":   spin($blue.base, 10%),
+  "accent-2":   spin($blue.base, 20%),
+  "accent-3":   spin($blue.base, 30%),
+  "accent-4":   spin($blue.base, 40%)
+}
+
+$colors.blue = $blue;
+
+$theme.primary = $blue.base;
