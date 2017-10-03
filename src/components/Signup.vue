@@ -3,16 +3,14 @@
     <v-layout row>
       <v-flex md4 offset-md4>
         <v-stepper v-model='step'>
-          <v-stepper-header>
-            <v-stepper-step step='1' :complete='step > 1'>Login</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step step='2' :complete='step > 2'>Select role</v-stepper-step>
-          </v-stepper-header>
           <v-stepper-content step='1'>
-            <v-btn primary @click='signIn' :loading='inProgress'>Sign in with Google</v-btn>
+            <v-btn primary @click='signIn' :loading='inProgress'>Continue with Google</v-btn>
           </v-stepper-content>
           <v-stepper-content step='2'>
             <v-card class='elevation-0'>
+              <v-card-title primary-title>
+                <h5>Select your role</h5>
+              </v-card-title>
               <v-card-text>
                 <v-radio-group v-model='role' row>
                   <v-radio label='Tutor' value='tutor' ></v-radio>
@@ -20,7 +18,7 @@
                 </v-radio-group>
               </v-card-text>
             </v-card>
-            <v-btn primary @click='selectRole' :loading='inProgress'>Proceed</v-btn>
+            <v-btn block primary @click='selectRole' :loading='inProgress'>Proceed</v-btn>
           </v-stepper-content>
         </v-stepper>
       </v-flex>
