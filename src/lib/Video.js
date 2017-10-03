@@ -10,9 +10,28 @@ export default class Video {
     });
   }
 
-  static connect(accessToken, roomName) {
-    return TwilioVideo.connect(accessToken, {name: roomName});
+  static connect(accessToken, roomName, video = false, audio = true) {
+    return new Promise((resolve, reject) => {
+      // Get the Tracks
+      Video.getTracks({audio: audio, video: video}).then((localTracks) => {
+        const connection = TwilioVideo.connect(accessToken, {
+          name: roomName,
+          tracks: localTracks
+        });
+
+        // Resolve
+        resolve(connection);
+      }).catch(e => {
+        reject(e);
+      });
+    });
   }
 
-
+  static getTracks(options = {}) {
+    return new Promise((resolve, reject) => {
+      TwilioVideo.createLocalTracks(options).then((tracks) => {
+        resolve(tracks);
+      });
+    })
+  }
 }
