@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Auth from '@/lib/Auth'
 import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
+import Classroom from '../pages/Classroom'
 
 Vue.use(Router);
 
@@ -17,6 +18,11 @@ const router = new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard
+    },
+    {
+      path: '/classroom/:slug',
+      name: 'classroom',
+      component: Classroom
     }
   ]
 })
