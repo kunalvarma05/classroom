@@ -1,5 +1,5 @@
 <template>
-  <v-app id="classroom" toolbar dark>
+  <div id="classroom">
     <stream v-show="tabIsActive('stream')"></stream>
     <slides v-show="tabIsActive('slides')"></slides>
     <whiteboard v-show="tabIsActive('whiteboard')"></whiteboard>
@@ -31,7 +31,7 @@
         <v-icon>insert_comment</v-icon>
       </v-btn>
     </v-bottom-nav>
-  </v-app>
+  </div>
 </template>
 
 <script>
