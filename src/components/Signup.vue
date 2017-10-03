@@ -8,9 +8,7 @@
           </v-stepper-content>
           <v-stepper-content step='2'>
             <v-card class='elevation-0'>
-              <v-card-title primary-title>
-                <h5>Select your role</h5>
-              </v-card-title>
+              <h5>Select your role</h5>
               <v-card-text>
                 <v-radio-group v-model='role' row>
                   <v-radio label='Tutor' value='tutor' ></v-radio>
@@ -18,7 +16,7 @@
                 </v-radio-group>
               </v-card-text>
             </v-card>
-            <v-btn block primary @click='selectRole' :loading='inProgress'>Proceed</v-btn>
+            <v-btn block primary @click='selectRole' :disabled="!role" :loading='inProgress'>Proceed</v-btn>
           </v-stepper-content>
         </v-stepper>
       </v-flex>
@@ -37,7 +35,7 @@
       return {
         step: 1,
         user: null,
-        role: null,
+        role: false,
         inProgress: false,
         signInFail: false
       }
