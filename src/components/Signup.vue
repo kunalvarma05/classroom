@@ -11,7 +11,7 @@
               <h5>Select your role</h5>
               <v-card-text>
                 <v-radio-group v-model='role' row>
-                  <v-radio label='Tutor' value='tutor' ></v-radio>
+                  <v-radio label='Tutor' value='tutor'></v-radio>
                   <v-radio label='Student' value='student'></v-radio>
                 </v-radio-group>
               </v-card-text>
@@ -46,11 +46,11 @@
 
         Auth.authenticate()
           .then(user => {
-            this.$auth.setUser(user);
-
             userService.get(user.id)
               .then(existingUser => {
+                console.log(existingUser);
                 if (existingUser) {
+                  this.$auth.setUser(existingUser);
                   this.$router.push('/dashboard');
                 } else {
                   this.user = user;
@@ -71,6 +71,7 @@
         user.role = this.role;
         userService.create(user.id, user)
           .then(() => {
+            this.$auth.setUser(user);
             this.inProgress = false;
             this.$router.push('/dashboard');
           })
