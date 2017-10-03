@@ -1,4 +1,5 @@
 export default {
+  apiUrl: "https://6ef1d677.ngrok.io",
   firebase: {
     apiKey: "abcd1234",
     authDomain: "APP_NAME.firebaseapp.com",
