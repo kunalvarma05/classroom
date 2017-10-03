@@ -5,8 +5,8 @@ export default {
     return Firebase.instance().database();
   },
 
-  get() {
-    return this.db().ref('/name').once('value').then((snapshot) => {
+  get(id) {
+    return this.db().ref('/users/' + id).once('value').then((snapshot) => {
       return snapshot.val();
     });
   },
