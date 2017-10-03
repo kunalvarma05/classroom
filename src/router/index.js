@@ -4,6 +4,7 @@ import Auth from '@/lib/Auth'
 import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
 import Classroom from '../pages/Classroom'
+import Courses from '../pages/Courses'
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ const router = new Router({
       path: '/classroom/:slug',
       name: 'classroom',
       component: Classroom
+    },
+    {
+      path: '/courses',
+      name: 'courses',
+      component: Courses
     }
   ]
 })
