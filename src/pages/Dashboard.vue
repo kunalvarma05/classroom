@@ -1,7 +1,6 @@
 <template>
   <v-container class='dashboard-page'>
-    <h1>Dashboard</h1>
-    <v-btn flat @click.native='logout'>Logout</v-btn>
+    <router-view></router-view>
   </v-container>
 </template>
 

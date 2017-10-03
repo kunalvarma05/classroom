@@ -5,6 +5,7 @@ import Courses from '../pages/Courses'
 import Dashboard from '../pages/Dashboard'
 import Classroom from '../pages/Classroom'
 import Mappings from './middlewares/mappings'
+import DashboardMain from '../pages/DashboardMain'
 
 Vue.use(Router);
 
@@ -19,12 +20,26 @@ const router = new Router({
       }
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
+      path: '/app',
       component: Dashboard,
       meta: {
         middlewares: ['auth']
-      }
+      },
+      children: [
+        {
+          path: '/',
+          name: 'dashboard',
+          component: DashboardMain
+        },
+        {
+          path: 'courses',
+          name: 'courses',
+          component: Courses,
+          meta: {
+            middlewares: ['auth', 'role:tutor']
+          }
+        }
+      ]
     },
     {
       path: '/classroom/:slug',
@@ -32,14 +47,6 @@ const router = new Router({
       component: Classroom,
       meta: {
         middlewares: ['auth']
-      }
-    },
-    {
-      path: '/courses',
-      name: 'courses',
-      component: Courses,
-      meta: {
-        middlewares: ['auth', 'role:tutor']
       }
     }
   ]
@@ -62,8 +69,8 @@ router.beforeEach((to, from, next) => {
         }
       })
     }
-  })
+  });
   next()
-})
+});
 
 export default router;
