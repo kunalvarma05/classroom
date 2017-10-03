@@ -75,4 +75,11 @@ export default class Firebase {
     return this.app.storage();
   }
 
+  /**
+   * Get the Firebase client
+   */
+  static getClient() {
+    return libFirebase;
+  }
+
 }
