@@ -1,6 +1,6 @@
 <template>
   <v-container class="courses-page">
-    <h4>Manage your courses.</h4>
+    <h4>Courses</h4>
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
     <v-container grid-list-md v-if='!loading'>
       <v-layout wrap>
@@ -8,7 +8,7 @@
           <form @submit.prevent="updateCourse(course)">
             <v-card>
               <v-card-title primary-title v-if="!course.visible">
-                <h3 class="headline mb-0">{{course.courseName}}</h3>
+                <h6 class="mb-0">{{course.courseName}}</h6>
               </v-card-title>
               <v-card-text v-if="course.visible">
                 <v-text-field v-model='course.courseName' label="Name" required></v-text-field>
@@ -33,26 +33,25 @@
           </form>
         </v-flex>
         <v-flex xs3>
-          <form @submit.prevent="addCourse">
-            <v-card>
-              <v-card-text class="text-xs-center">
-                <v-btn outline fab small class="indigo--text" @click='toggleAddCourseVisible' v-if='!addCourseVisible'>
-                  <v-icon>add</v-icon>
-                </v-btn>
-                <v-text-field v-if='addCourseVisible' v-model='courseName' label="Name" required></v-text-field>
-              </v-card-text>
-              <v-divider v-if='addCourseVisible'></v-divider>
-              <v-card-actions v-if='addCourseVisible'>
-                <v-spacer></v-spacer>
-                <v-btn icon @click.native='addCourse' type="submit">
-                  <v-icon>done</v-icon>
-                </v-btn>
-                <v-btn icon @click.native='toggleAddCourseVisible'>
-                  <v-icon>cancel</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </form>
+          <v-card>
+            <v-card-text class="text-xs-center">
+              <v-btn fab small class="primary" @click='toggleAddCourseVisible' v-if='!addCourseVisible'>
+                <v-icon>add</v-icon>
+              </v-btn>
+              <v-text-field v-if='addCourseVisible' v-model='courseName' label="Name" required
+                            @keyup.enter.prevent="addCourse"></v-text-field>
+            </v-card-text>
+            <v-divider v-if='addCourseVisible'></v-divider>
+            <v-card-actions v-if='addCourseVisible'>
+              <v-spacer></v-spacer>
+              <v-btn icon @click.native='addCourse' type="submit">
+                <v-icon>done</v-icon>
+              </v-btn>
+              <v-btn icon @click.native='toggleAddCourseVisible'>
+                <v-icon>cancel</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
