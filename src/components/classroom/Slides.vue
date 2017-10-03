@@ -1,5 +1,5 @@
 <template>
-  <div class="stream-page">
+  <div class="slides-page">
     <h1>Slides</h1>
   </div>
 </template>

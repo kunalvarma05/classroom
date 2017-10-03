@@ -1,5 +1,5 @@
 <template>
-  <div class="stream-page">
+  <div class="doubts-page">
     <h1>Doubts</h1>
   </div>
 </template>

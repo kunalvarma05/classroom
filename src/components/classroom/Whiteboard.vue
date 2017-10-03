@@ -1,5 +1,5 @@
 <template>
-  <div class="stream-page">
+  <div class="whiteboard-page">
     <h1>Whiteboard</h1>
   </div>
 </template>
