@@ -3,23 +3,29 @@
     <v-container fluid>
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
       <img src="../assets/images/logo-blue.svg" :alt="title">
-      <hello></hello>
+      <signup v-if='!loading' />
+      <div>
+        <v-progress-circular indeterminate class="primary--text" v-if='loading'></v-progress-circular>
+      </div>
     </v-container>
   </div>
 </template>
 
 <script>
-  import Hello from '../components/Hello';
+  import Signup from '../components/Signup';
+  import userService from '../store/User';
+  import Firebase from '../lib/Firebase';
 
   export default {
     name: 'home',
     data() {
       return {
-        title: 'Classroom'
+        title: 'Classroom',
+        loading: false
       }
     },
     components: {
-      Hello
+      Signup
     }
   }
 </script>
@@ -30,7 +36,7 @@
 -->
 <style lang="stylus">
   .home-page
-    display: flex;
-    height: 100%;
-    align-items: center;
+    display: flex
+    height: 100%
+    align-items: center
 </style>
