@@ -48,8 +48,10 @@
       signIn() {
         this.inProgress = true;
 
-        Auth()
+        Auth.authenticate()
           .then(user => {
+            this.$auth.setUser(user);
+
             userService.get(user.id)
               .then(existingUser => {
                 if (existingUser) {

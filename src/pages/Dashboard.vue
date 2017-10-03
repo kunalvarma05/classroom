@@ -13,6 +13,7 @@
     methods: {
       logout() {
         Firebase.instance().auth().signOut();
+        this.$auth.destroyUser();
         this.$router.push('/');
       }
     }
