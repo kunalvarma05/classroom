@@ -2,6 +2,7 @@
   <v-app id="classroom" toolbar dark>
     <v-navigation-drawer
       persistent
+      disable-route-watcher
       v-model="drawer"
       light
       absolute
