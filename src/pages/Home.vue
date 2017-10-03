@@ -3,23 +3,26 @@
     <v-container fluid>
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
       <img src="../assets/images/logo-blue.svg" :alt="title">
-      <hello></hello>
+      <signup v-if='!loading' />
     </v-container>
   </div>
 </template>
 
 <script>
-  import Hello from '../components/Hello';
+  import Signup from '../components/Signup';
+  import userService from '../store/User';
+  import Firebase from '../lib/Firebase';
 
   export default {
     name: 'home',
     data() {
       return {
-        title: 'Classroom'
+        title: 'Classroom',
+        loading: false
       }
     },
     components: {
-      Hello
+      Signup
     }
   }
 </script>
