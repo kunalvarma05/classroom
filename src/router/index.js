@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Auth from '@/lib/Auth'
 import Home from '../pages/Home'
+import Courses from '../pages/Courses'
 import Dashboard from '../pages/Dashboard'
 import Classroom from '../pages/Classroom'
-import Courses from '../pages/Courses'
+import Mappings from './middlewares/mappings'
 
 Vue.use(Router);
 
@@ -13,36 +13,57 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        middlewares: ['no-auth']
+      }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        middlewares: ['auth']
+      }
     },
     {
       path: '/classroom/:slug',
       name: 'classroom',
-      component: Classroom
+      component: Classroom,
+      meta: {
+        middlewares: ['auth']
+      }
     },
     {
       path: '/courses',
       name: 'courses',
-      component: Courses
+      component: Courses,
+      meta: {
+        middlewares: ['auth', 'role:tutor']
+      }
     }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
-  if (to.path === '/') {
-    next();
-  }
+  to.matched.forEach((route) => {
+    if (route.meta &&
+      route.meta.middlewares !== undefined &&
+      route.meta.middlewares.length
+    ) {
+      // Loop over all the middlewares of the route
+      route.meta.middlewares.forEach((alias) => {
+        // If a middleware was found
+        let middleware = Mappings[alias]
 
-  if (!Auth.getUser()) {
-    next('/');
-  } else {
-    next();
-  }
-});
+        if (middleware) {
+          // Call the middleware
+          return middleware.call(this, to, from, next)
+        }
+      })
+    }
+  })
+  next()
+})
 
 export default router;
