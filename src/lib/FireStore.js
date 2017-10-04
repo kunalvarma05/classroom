@@ -118,34 +118,47 @@ export default class FireStore {
     // (Promises) of the item references (Properties) passed.
     let resolvables = [];
 
-    // Loop over all references to resolve
-    references.forEach((ref) => {
-      // If the item has ref property
-      if (item.hasOwnProperty(ref)) {
-        let itemRef = item[ref];
-
-        // If the Item Ref is iterable
-        if (Utils.isIterable(itemRef)) {
-          // Loop over all the children
-          for (let index in itemRef) {
-            if (itemRef.hasOwnProperty(index)) {
-              let propRef = itemRef[index];
-              // Push a Promise to fetch data of the reference and when resolving,
-              // swap the item's reference with the reference data.
-              resolvables.push(FireStore.getResolvableForReference(itemRef, index, propRef));
-            }
-          }
-        } else {
-          // Push a Promise to fetch data of the reference and when resolving,
-          // swap the item's reference with the reference data.
-          resolvables.push(FireStore.getResolvableForReference(item, ref, docRef));
-        }
+    // If the references is an number we will loop through it.
+    // This is in case we're handling an item that is an array.
+    // Thus, it's index are the references.
+    if (typeof references === "number") {
+      for (let i = 0; i < references; i++) {
+        resolvables.push(FireStore.getResolvableForItemReference(item, i));
       }
-    });
+    } else {
+      // Loop over all references (items) to resolve
+      references.forEach((ref) => {
+        resolvables.push(FireStore.getResolvableForItemReference(item, ref));
+      });
+
+    }
 
     return Promise.all(resolvables).then((res) => {
       return item;
     });
+  }
+
+  // Get resolvable for the given reference
+  static getResolvableForItemReference(item, ref) {
+    let resolvables = [];
+
+    // If the item has ref property
+    if (item.hasOwnProperty(ref)) {
+      let itemRef = item[ref];
+
+      // If the Item Ref is iterable
+      if (Utils.isIterable(itemRef)) {
+        // Push a Promise to fetch data of the reference and when resolving,
+        // swap the item's reference with the reference data.
+        resolvables.push(FireStore.getResolvablesForItem(itemRef, itemRef.length));
+      } else {
+        // Push a Promise to fetch data of the reference and when resolving,
+        // swap the item's reference with the reference data.
+        resolvables.push(FireStore.getResolvableForReference(item, ref, itemRef));
+      }
+    }
+
+    return resolvables;
   }
 
   /**
