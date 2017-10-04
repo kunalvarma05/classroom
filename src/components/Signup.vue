@@ -46,9 +46,8 @@
 
         Auth.authenticate()
           .then(user => {
-            userService.get(user.id)
+            userService.find(user.id)
               .then(existingUser => {
-                console.log(existingUser);
                 if (existingUser) {
                   this.$auth.setUser(existingUser);
                   this.$router.push({name: 'dashboard'});
@@ -70,13 +69,12 @@
         let user = Object.assign({}, this.user);
         user.role = this.role;
         userService.create(user.id, user)
-          .then(() => {
-            this.$auth.setUser(user);
+          .then((createdUser) => {
+            this.$auth.setUser(createdUser);
             this.inProgress = false;
             this.$router.push({name: 'dashboard'});
           })
           .catch(err => {
-            console.log(err);
             this.signInFail = true;
             this.inProgress = false;
           });
