@@ -1,4 +1,5 @@
 import Firebase from './Firebase';
+import Utils from "./Utils";
 
 export default class FireStore {
   static instance() {
@@ -121,11 +122,24 @@ export default class FireStore {
     references.forEach((ref) => {
       // If the item has ref property
       if (item.hasOwnProperty(ref)) {
-        let docRef = item[ref];
+        let itemRef = item[ref];
 
-        // Push a Promise to fetch data of the reference and when resolving,
-        // swap the item's reference with the reference data.
-        resolvables.push(FireStore.getResolvableForReference(item, ref, docRef));
+        // If the Item Ref is iterable
+        if (Utils.isIterable(itemRef)) {
+          // Loop over all the children
+          for (let index in itemRef) {
+            if (itemRef.hasOwnProperty(index)) {
+              let propRef = itemRef[index];
+              // Push a Promise to fetch data of the reference and when resolving,
+              // swap the item's reference with the reference data.
+              resolvables.push(FireStore.getResolvableForReference(itemRef, index, propRef));
+            }
+          }
+        } else {
+          // Push a Promise to fetch data of the reference and when resolving,
+          // swap the item's reference with the reference data.
+          resolvables.push(FireStore.getResolvableForReference(item, ref, docRef));
+        }
       }
     });
 
