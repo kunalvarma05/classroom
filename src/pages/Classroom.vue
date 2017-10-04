@@ -48,7 +48,8 @@
       return {
         drawer: false,
         activeTab: "stream",
-        course: false
+        course: false,
+        sessionEnded: false
       }
     },
     created() {
@@ -56,10 +57,6 @@
         Firebase.instance().database().ref('courses').child(this.courseTutorId).child(this.courseId).once('value').then((snapshot) => {
           const course = snapshot.val();
           this.course = course;
-          sessionService.notifyStudents(this.$currentUser, {
-            id: this.courseId,
-            courseName: course.courseName
-          });
         });
       }
     },
@@ -77,7 +74,7 @@
     methods: {
       tabIsActive(tab) {
         return this.activeTab === tab;
-      }
+      },
     },
     components: {
       Stream,

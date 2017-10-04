@@ -80,7 +80,7 @@
         });
       },
       listenToNotifications() {
-        Firebase.instance().database().ref('/notifications').on('child_added', (snapshot) => {
+        Firebase.instance().database().ref('/sessions').on('child_added', (snapshot) => {
           const notification = snapshot.val();
           const course = notification.course;
           const tutor = notification.tutor;

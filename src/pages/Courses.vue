@@ -17,7 +17,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn icon @click="startSession(course.id)" v-if="!course.visible">
+                <v-btn icon @click="startSession(course.id, course.courseName)" v-if="!course.visible">
                   <v-icon>launch</v-icon>
                 </v-btn>
 
@@ -65,6 +65,7 @@
 
 <script>
   import Firebase from '@/lib/Firebase'
+  import sessionService from '../store/Session';
 
   export default {
     name: 'courses',
@@ -93,7 +94,11 @@
       };
     },
     methods: {
-      startSession(course_id) {
+      startSession(course_id, course_name) {
+        sessionService.notifyStudents(this.$currentUser, {
+          id: course_id,
+          courseName: course_name
+        });
         this.$router.push({name: 'classroom', params: {tutor_id: this.$currentUser.id, course_id: course_id}});
       },
       addCourse() {
