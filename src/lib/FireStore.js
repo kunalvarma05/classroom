@@ -19,7 +19,7 @@ export default class FireStore {
     });
   }
 
-  static getCollectionItemData(collection) {
+  static getCollectionItemsData(collection) {
     const items = [];
     collection.forEach((doc) => {
       items.push(FireStore.getDocData(doc));
@@ -28,7 +28,7 @@ export default class FireStore {
     return items;
   }
 
-  /*
+  /**
    * Now this method is a beauty. It takes a collection, then:
    * Fetches data of the items. If (item properties with reference)
    * references to resolve are given, it loops over all the items, and
@@ -43,6 +43,11 @@ export default class FireStore {
    * Oh, and if no references are given, it simply returns a promise that on resolving,
    * returns the items data. Phew.
    *
+   * @param collection
+   * @param {Array} references Name of properties, that contain a reference
+   *                          to a document and must be resolved.
+   *
+   * @return {Promise}
    */
   static resolveCollectionItems(collection, references = []) {
     // I swear, I promise :p
@@ -54,20 +59,21 @@ export default class FireStore {
       }
 
       // Get collection items data
-      let items = FireStore.getCollectionItemData(collection);
+      let items = FireStore.getCollectionItemsData(collection);
 
-      let itemsResolvables = [];
+      let resolvablesForItems = [];
 
       // If references are to be resolved
       if (references.length) {
         // Get item resolvables (Is that even a word? :/)
-        itemsResolvables = FireStore.getItemsResolvables(items, references);
+        resolvablesForItems = FireStore.getResolvablesForItems(items, references);
       } else {
-        itemsResolvables.push(items);
+        // No references to resolve.
+        resolvablesForItems.push(items);
       }
 
       // Promise that resolves with all the items
-      return Promise.all(itemsResolvables).then((itemsResolved) => {
+      return Promise.all(resolvablesForItems).then((itemsResolved) => {
         resolve(itemsResolved);
       });
     });
@@ -81,13 +87,15 @@ export default class FireStore {
    * @param items
    * @param references
    */
-  static getItemsResolvables(items, references) {
+  static getResolvablesForItems(items, references) {
+    // This will be an array containing the
+    // resolvables (Promises) of all the items.
     let itemResolvables = [];
 
     // Loop over all items
     items.forEach((item) => {
       // Get resolvable for each item and it's references
-      let resolvable = FireStore.getReferencesResolvable(item, references);
+      let resolvable = FireStore.getResolvablesForItem(item, references);
 
       // Push a promise to itemResolvables that resolves
       // all the reference resolvables
@@ -97,8 +105,16 @@ export default class FireStore {
     return itemResolvables;
   }
 
-  static getReferencesResolvable(item, references) {
-    // Resolvables
+  /**
+   * Get all resolvables for the given references of the item.
+   *
+   * @param item
+   * @param {Array} references
+   * @return {Promise}
+   */
+  static getResolvablesForItem(item, references) {
+    // This will be an array containing all the resolvables
+    // (Promises) of the item references (Properties) passed.
     let resolvables = [];
 
     // Loop over all references to resolve
@@ -109,7 +125,7 @@ export default class FireStore {
 
         // Push a Promise to fetch data of the reference and when resolving,
         // swap the item's reference with the reference data.
-        resolvables.push(FireStore.getReferenceResolvable(item, ref, docRef));
+        resolvables.push(FireStore.getResolvableForReference(item, ref, docRef));
       }
     });
 
@@ -118,7 +134,13 @@ export default class FireStore {
     });
   }
 
-  static getReferenceResolvable(item, ref, docReference) {
+  /**
+   *
+   * @param item
+   * @param ref
+   * @param docReference
+   */
+  static getResolvableForReference(item, ref, docReference) {
     return FireStore.fetchDataFromReference(docReference).then((refData) => {
       item[ref] = refData;
       return item;
