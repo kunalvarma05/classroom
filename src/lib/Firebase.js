@@ -1,6 +1,8 @@
 import ENV from '../env'
 
 const libFirebase = require('firebase');
+// Required for side-effects
+require("firebase/firestore");
 
 export default class Firebase {
 
@@ -55,6 +57,13 @@ export default class Firebase {
   }
 
   /**
+   * Get the Firebase client
+   */
+  static getClient() {
+    return libFirebase;
+  }
+
+  /**
    * Get the Firebase database Instance.
    */
   database() {
@@ -76,10 +85,11 @@ export default class Firebase {
   }
 
   /**
-   * Get the Firebase client
+   * Get Firestore
+   * @returns {*|firebase.firestore.Firestore}
    */
-  static getClient() {
-    return libFirebase;
+  firestore() {
+    return this.app.firestore();
   }
 
 }
