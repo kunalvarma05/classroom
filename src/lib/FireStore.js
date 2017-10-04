@@ -56,18 +56,18 @@ export default class FireStore {
       // Get collection items data
       let items = FireStore.getCollectionItemData(collection);
 
-      let itemResolvables = [];
+      let itemsResolvables = [];
 
       // If references are to be resolved
       if (references.length) {
         // Get item resolvables (Is that even a word? :/)
-        itemResolvables = FireStore.getItemResolvables(items, references);
+        itemsResolvables = FireStore.getItemsResolvables(items, references);
       } else {
-        itemResolvables.push(items);
+        itemsResolvables.push(items);
       }
 
       // Promise that resolves with all the items
-      return Promise.all(itemResolvables).then((itemsResolved) => {
+      return Promise.all(itemsResolvables).then((itemsResolved) => {
         resolve(itemsResolved);
       });
     });
@@ -81,36 +81,47 @@ export default class FireStore {
    * @param items
    * @param references
    */
-  static getItemResolvables(items, references) {
+  static getItemsResolvables(items, references) {
     let itemResolvables = [];
 
     // Loop over all items
     items.forEach((item) => {
-      // Resolvables
-      let resolvables = [];
-
-      // Loop over all references to resolve
-      references.forEach((ref) => {
-        // If the item has ref property
-        if (item.hasOwnProperty(ref)) {
-          let itemRef = item[ref];
-
-          // Push a Promise to fetch data of the reference and when resolving,
-          // swap the item's reference with the reference data.
-          resolvables.push(FireStore.fetchDataFromReference(itemRef).then((refData) => {
-            item[ref] = refData;
-            return item;
-          }));
-        }
-      });
+      // Get resolvable for each item and it's references
+      let resolvable = FireStore.getReferencesResolvable(item, references);
 
       // Push a promise to itemResolvables that resolves
       // all the reference resolvables
-      itemResolvables.push(Promise.all(resolvables).then((res) => {
-        return item;
-      }));
+      itemResolvables.push(resolvable);
     });
 
     return itemResolvables;
+  }
+
+  static getReferencesResolvable(item, references) {
+    // Resolvables
+    let resolvables = [];
+
+    // Loop over all references to resolve
+    references.forEach((ref) => {
+      // If the item has ref property
+      if (item.hasOwnProperty(ref)) {
+        let docRef = item[ref];
+
+        // Push a Promise to fetch data of the reference and when resolving,
+        // swap the item's reference with the reference data.
+        resolvables.push(FireStore.getReferenceResolvable(item, ref, docRef));
+      }
+    });
+
+    return Promise.all(resolvables).then((res) => {
+      return item;
+    });
+  }
+
+  static getReferenceResolvable(item, ref, docReference) {
+    return FireStore.fetchDataFromReference(docReference).then((refData) => {
+      item[ref] = refData;
+      return item;
+    });
   }
 }
