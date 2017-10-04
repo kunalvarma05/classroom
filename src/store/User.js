@@ -1,27 +1,27 @@
-import Firebase from "../lib/Firebase";
+import FireStore from "../lib/FireStore";
 
 export default {
   db() {
-    return Firebase.instance().firestore();
+    return FireStore.instance();
   },
 
   collection() {
     return this.db().collection('users');
   },
 
-  find(id) {
-    return this.collection().doc(id).get().then((document) => {
-      if (document.exists) {
-        return document.data();
-      }
+  doc(id) {
+    return this.collection().doc(id);
+  },
 
-      return false;
+  find(id) {
+    return this.doc(id).get().then((doc) => {
+      return FireStore.getDocData(doc);
     });
   },
 
   create(id, user) {
     return new Promise((resolve, reject) => {
-      this.collection().doc(id).set(user).then(() => {
+      this.doc(id).set(user).then(() => {
         user.id = id;
         return resolve(user);
       });
