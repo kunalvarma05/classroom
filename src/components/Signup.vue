@@ -7,7 +7,7 @@
             <v-btn primary @click='signIn' :loading='inProgress'>Continue with Google</v-btn>
           </v-stepper-content>
           <v-stepper-content step='2'>
-            <v-card class='elevation-0'>
+            <div class='elevation-0'>
               <h5>Select your role</h5>
               <v-card-text>
                 <v-radio-group v-model='role' row>
@@ -15,7 +15,7 @@
                   <v-radio label='Student' value='student'></v-radio>
                 </v-radio-group>
               </v-card-text>
-            </v-card>
+            </div>
             <v-btn block primary @click='selectRole' :disabled="!role" :loading='inProgress'>Proceed</v-btn>
           </v-stepper-content>
         </v-stepper>
