@@ -2,8 +2,8 @@
   <div class="home-page text-xs-center">
     <v-container fluid>
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
-      <img src="../assets/images/logo-blue.svg" :alt="title">
-      <signup v-if='!loading' />
+      <img src="../assets/images/logo.svg" :alt="title">
+      <signup v-if='!loading'/>
       <div>
         <v-progress-circular indeterminate class="primary--text" v-if='loading'></v-progress-circular>
       </div>
