@@ -1,8 +1,9 @@
-import Firebase from "../lib/Firebase";
+import userService from './User';
+import FireStore from "../lib/FireStore";
 
 export default {
   db() {
-    return Firebase.instance().firestore();
+    return FireStore.instance();
   },
 
   collection() {
@@ -11,26 +12,27 @@ export default {
 
   all() {
     return this.collection().get().then((collection) => {
-      if (!collection.empty) {
-        const courses = [];
-        collection.forEach((doc) => {
-          courses.push(doc.data());
-        });
-
-        return courses;
-      }
-
-      return [];
+      return FireStore.resolveCollectionItems(collection);
     });
   },
 
-  find(id) {
-    return this.collection().doc(id).get().then((document) => {
-      if (document.exists) {
-        return document.data();
-      }
+  getAllByTutorID(tutor_id, references = ['tutor']) {
+    return this.collection().where('tutor', '==', userService.doc(tutor_id))
+      .get().then((collection) => {
+        return FireStore.resolveCollectionItems(collection, references);
+      });
+  },
 
-      return false;
+  getAllByStudentID(student_id, references = ['tutor']) {
+    return this.collection().where(`students.${student_id}`, '==', userService.doc(student_id))
+      .get().then((collection) => {
+        return FireStore.resolveCollectionItems(collection, references);
+      });
+  },
+
+  find(id) {
+    return this.collection().doc(id).get().then((doc) => {
+      return FireStore.getDocData(doc);
     });
   },
 
