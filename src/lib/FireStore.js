@@ -91,20 +91,24 @@ export default class FireStore {
 
       // Loop over all references to resolve
       references.forEach((ref) => {
-        // If item has ref
+        // If the item has ref property
         if (item.hasOwnProperty(ref)) {
-          resolvables.push(FireStore.fetchDataFromReference(item[ref]).then((refDoc) => {
-            // `ref` for `item` resolved
-            // swap the ref with resolved ref
-            item[ref] = refDoc;
+          let itemRef = item[ref];
+
+          // Push a Promise to fetch data of the reference and when resolving,
+          // swap the item's reference with the reference data.
+          resolvables.push(FireStore.fetchDataFromReference(itemRef).then((refData) => {
+            item[ref] = refData;
             return item;
           }));
-
-          // Push a promise to itemResolvables that resolves
-          // all the reference resolvables
-          itemResolvables.push(Promise.all(resolvables));
         }
       });
+
+      // Push a promise to itemResolvables that resolves
+      // all the reference resolvables
+      itemResolvables.push(Promise.all(resolvables).then((res) => {
+        return item;
+      }));
     });
 
     return itemResolvables;
