@@ -13,48 +13,53 @@
               :src="coverImage"
             >
               <v-container fill-height>
-                <v-layout fill-height>
-                  <v-flex flexbox align-center justify-space-around class="is-flexbox">
-                    <v-flex justify-center class="is-flexbox">
-                      <v-avatar class="white" size="100px">
+                <v-layout fill-height row align-center justify-center>
+                  <v-flex align-center justify-center lg2 md2 sm12 xs12 class="is-flexbox">
+                    <v-avatar class="white" size="100px">
                       <span class="blue--text headline">
                         {{courseAlias}}
                       </span>
-                      </v-avatar>
-                    </v-flex>
-                    <v-flex justify-center class="is-flexbox">
+                    </v-avatar>
+                  </v-flex>
+                  <v-flex align-center justify-center lg6 md6 sm12 xs12 class="is-flexbox">
+                    <div>
                       <h3 class="headline">
                         {{course.name}}
                       </h3>
-                    </v-flex>
+                      <v-avatar class="white" size="30px">
+                        <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
+                      </v-avatar>
+                      <span class="pl-2">
+                          {{course.tutor.name}}
+                        </span>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
             </v-card-media>
 
+            <div class="course-tabs">
+              <v-tabs dark v-model="selectedTab" centered>
+                <v-tabs-bar class="primary darken-3">
+                  <v-tabs-item
+                    href="#show-course"
+                    ripple
+                  >
+                    Overview
+                  </v-tabs-item>
+                  <v-tabs-item
+                    href="#course-sessions"
+                    ripple
+                  >
+                    Sessions
+                  </v-tabs-item>
+
+                  <v-tabs-slider class="white"></v-tabs-slider>
+                </v-tabs-bar>
+              </v-tabs>
+            </div>
+
             <div class="card--inside">
-
-              <div>
-                <v-tabs dark v-model="selectedTab" centered class="course-tabs">
-                  <v-tabs-bar class="primary darken-3">
-                    <v-tabs-item
-                      href="#show-course"
-                      ripple
-                    >
-                      Overview
-                    </v-tabs-item>
-                    <v-tabs-item
-                      href="#course-sessions"
-                      ripple
-                    >
-                      Sessions
-                    </v-tabs-item>
-
-                    <v-tabs-slider class="white"></v-tabs-slider>
-                  </v-tabs-bar>
-                </v-tabs>
-              </div>
-
               <router-view></router-view>
             </div>
           </v-card>
@@ -156,7 +161,16 @@
     .card__actions
       padding: 16px;
 
-  .course-tabs
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    .course-card-media
+      .card__media__content
+        background: rgba(0, 0, 0, 0.4);
+
+    .course-tabs
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
+
+    .card--inside
+      padding: 15px;
+
+
 </style>
 
