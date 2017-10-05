@@ -66,6 +66,7 @@
                 ></v-text-field>
 
                 <v-btn :loading="updating" primary @click="updateCourse">Update</v-btn>
+                <v-btn @click="editing = false">Cancel</v-btn>
               </v-form>
             </div>
           </v-slide-y-transition>
