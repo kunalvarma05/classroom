@@ -17,5 +17,13 @@ export default {
     }
 
     return Array.isArray(obj);
+  },
+
+  abbreviate(str, max = 3) {
+    if (str.length > max) {
+      return str.match(/\b([A-Z])/g).join('');
+    }
+
+    return str;
   }
 }
