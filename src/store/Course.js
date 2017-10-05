@@ -11,9 +11,9 @@ export default {
     return this.db().collection('courses');
   },
 
-  all() {
+  all(references = ['tutor']) {
     return this.collection().get().then((collection) => {
-      return FireStore.resolveCollectionItems(collection);
+      return FireStore.resolveCollectionItems(collection, references);
     });
   },
 
@@ -31,9 +31,10 @@ export default {
       });
   },
 
-  find(id) {
+  find(id, references = ['tutor']) {
     return this.collection().doc(id).get().then((doc) => {
-      return FireStore.getDocData(doc);
+      let docData = FireStore.getDocData(doc);
+      return FireStore.getResolvableForItemReferences(docData, references);
     });
   },
 
