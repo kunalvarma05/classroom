@@ -54,6 +54,14 @@
                     Sessions
                   </v-tabs-item>
 
+                  <v-tabs-item
+                    href="#course-students"
+                    ripple
+                  >
+                    Students
+                  </v-tabs-item>
+
+
                   <v-tabs-slider class="white"></v-tabs-slider>
                 </v-tabs-bar>
               </v-tabs>
@@ -125,7 +133,7 @@
     methods: {
       fetchCourse() {
         this.loading = true;
-        courseService.find(this.slug).then((course) => {
+        courseService.find(this.slug, ['tutor', 'students']).then((course) => {
           this.course = course;
           this.loading = false;
         })

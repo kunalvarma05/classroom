@@ -9,6 +9,7 @@ import Mappings from './middlewares/mappings'
 import Sessions from '../pages/course/Sessions'
 import DashboardMain from '../pages/DashboardMain'
 import CourseOverview from '../pages/course/Overview'
+import CourseStudents from '../pages/course/Students'
 
 Vue.use(Router);
 
@@ -57,6 +58,11 @@ const router = new Router({
               path: 'sessions',
               name: 'course-sessions',
               component: Sessions
+            },
+            {
+              path: 'students',
+              name: 'course-students',
+              component: CourseStudents
             }
           ]
         }
