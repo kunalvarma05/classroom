@@ -73,15 +73,23 @@ export default {
   },
 
   enroll(course_id, student_id) {
-    return new Promise(function(resolve, reject) {
-      let studentRef = userService.doc(student_id);
+    return new Promise((resolve, reject) => {
+        let studentRef = userService.doc(student_id);
+        this.find(course_id, ['students']).then((course) => {
+          let courseStudents = course.students;
 
-      this.collection().doc(course_id).get().then((course) => {
-         let courseStudentsRef = course.students;
-         courseStudentsRef.add(studentRef).then(() => {
-           resolve();
-         });
+          if (!courseStudents || !courseStudents.length) {
+            courseStudents = [];
+          }
+
+          courseStudents.push(studentRef);
+
+          course.students = courseStudents;
+
+          this.update(course_id, course).then((course) => {
+            resolve(course);
+          });
+        });
       });
-    });
   }
 }
