@@ -1,5 +1,6 @@
 import userService from './User';
 import FireStore from "../lib/FireStore";
+import Utils from "../lib/Utils";
 
 export default {
   db() {
@@ -41,9 +42,11 @@ export default {
       let tutorRef = userService.doc(tutor_id);
       let courseRef = this.collection().doc();
       let courseId = courseRef.id;
+      let alias = Utils.abbreviate(name, 3);
       let courseObj = {
         id: courseId,
         name: name,
+        alias: alias,
         tutor: tutorRef
       };
 
