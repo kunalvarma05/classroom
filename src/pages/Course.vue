@@ -1,121 +1,99 @@
 <template>
   <div class="course-page">
-    <v-layout row fill-height align-center fill-width justify-center class="is-flexbox"
-              :class="{'loader-box': loading}">
-      <v-progress-circular v-if="loading" indeterminate :size="50" class="primary--text"></v-progress-circular>
+    <div class="course-overview-page">
+      <v-layout row fill-height align-center fill-width justify-center class="is-flexbox"
+                :class="{'loader-box': loading}">
+        <v-progress-circular v-if="loading" indeterminate :size="50" class="primary--text"></v-progress-circular>
 
-      <v-flex md8 sm10 xs12 fill-height v-if="!loading && course">
-        <v-card class="course-card">
-          <v-card-media
-            class="white--text course-card-media primary"
-            height="200px"
-            :src="coverImage"
-          >
-            <v-container fill-height>
-              <v-layout fill-height>
-                <v-flex flexbox align-center justify-space-around class="is-flexbox">
-                  <v-flex justify-center class="is-flexbox">
-                    <v-avatar class="white" size="100px">
+        <v-flex md8 sm10 xs12 fill-height v-if="!loading && course">
+          <v-card class="course-card">
+            <v-card-media
+              class="white--text course-card-media primary"
+              height="200px"
+              :src="coverImage"
+            >
+              <v-container fill-height>
+                <v-layout fill-height>
+                  <v-flex flexbox align-center justify-space-around class="is-flexbox">
+                    <v-flex justify-center class="is-flexbox">
+                      <v-avatar class="white" size="100px">
                       <span class="blue--text headline">
                         {{courseAlias}}
                       </span>
-                    </v-avatar>
+                      </v-avatar>
+                    </v-flex>
+                    <v-flex justify-center class="is-flexbox">
+                      <h3 class="headline">
+                        {{course.name}}
+                      </h3>
+                    </v-flex>
                   </v-flex>
-                  <v-flex justify-center class="is-flexbox">
-                    <h3 class="headline">
-                      {{course.name}}
-                    </h3>
-                  </v-flex>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-media>
+                </v-layout>
+              </v-container>
+            </v-card-media>
 
-          <div class="card__front" v-if="!editing">
-            <v-card-actions>
-              <v-btn @click="editCourse">
-                <v-icon left>edit</v-icon>
-                Edit
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn primary>
-                <v-icon left>add</v-icon>
-                Create new Session
-              </v-btn>
-            </v-card-actions>
-            <v-card-text>
-              {{course.description}}
-            </v-card-text>
-          </div>
-          <v-slide-y-transition>
-            <div class="card__back container fluid" v-if="editing">
-              <v-form>
-                <v-text-field
-                  label="Name"
-                  v-model="course.name"
-                  :counter="255"
-                  required
-                  :error-messages="errors.collect('name')"
-                  v-validate="'required'"
-                  data-vv-name="name"
-                  :disabled="updating"
-                ></v-text-field>
-                <v-text-field
-                  label="description"
-                  v-model="course.description"
-                  :counter="700"
-                  multiLine
-                  :rows="8"
-                  required
-                  :error-messages="errors.collect('description')"
-                  v-validate="'required'"
-                  data-vv-name="description"
-                  :disabled="updating"
-                ></v-text-field>
+            <div class="card--inside">
 
-                <v-alert error icon="warning" :value="valid">
-                  Please fix all the errors.
-                </v-alert>
+              <div>
+                <v-tabs v-model="selectedTab" centered class="course-tabs">
+                  <v-tabs-bar class="white">
+                    <v-tabs-item
+                      href="#show-course"
+                      ripple
+                    >
+                      Overview
+                    </v-tabs-item>
+                    <v-tabs-item
+                      href="#course-sessions"
+                      ripple
+                    >
+                      Sessions
+                    </v-tabs-item>
 
-                <v-btn :loading="updating" :disabled="valid" primary @click="validateAndUpdate">Update</v-btn>
-                <v-btn @click="editing = false">Cancel</v-btn>
-              </v-form>
+                    <v-tabs-slider class="primary"></v-tabs-slider>
+                  </v-tabs-bar>
+                </v-tabs>
+              </div>
+
+              <router-view></router-view>
             </div>
-          </v-slide-y-transition>
-        </v-card>
-      </v-flex>
-    </v-layout>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
   </div>
 </template>
 
 <script>
-  import courseService from '../store/Course';
+  import courseService from '@/store/Course';
   import VCardMedia from "vuetify/src/components/VCard/VCardMedia";
-  import Utils from "../lib/Utils";
+  import Utils from "@/lib/Utils";
+  import CourseOverview from "./course/Overview.vue";
 
 
   export default {
-    components: {VCardMedia},
+    components: {
+      CourseOverview,
+      VCardMedia
+    },
     name: 'course',
-    $validates: true,
     created() {
       this.fetchCourse();
     },
     data() {
       return {
         course: false,
-        loading: false,
-        editing: false,
-        updating: false
+        loading: false
       }
     },
     computed: {
-      valid() {
-        if (this.errors.count() > 0) {
-          return true;
+      selectedTab: {
+        get() {
+          return this.$route.name;
+        },
+        set(tab) {
+          this.$router.push({name: tab, params: {slug: this.course.id}});
         }
-
-        return false;
       },
       slug() {
         return this.$route.params.slug;
@@ -177,5 +155,8 @@
     padding: 20px;
     .card__actions
       padding: 16px;
+
+  .course-tabs
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 </style>
 
