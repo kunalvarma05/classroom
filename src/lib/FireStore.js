@@ -155,7 +155,7 @@ export default class FireStore {
       }
     }
 
-    return resolvables;
+    return Promise.all(resolvables);
   }
 
   /**
