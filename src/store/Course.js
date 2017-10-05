@@ -11,6 +11,10 @@ export default {
     return this.db().collection('courses');
   },
 
+  doc(id) {
+    return this.collection().doc(id);
+  },
+
   all(references = ['tutor']) {
     return this.collection().get().then((collection) => {
       return FireStore.resolveCollectionItems(collection, references);
