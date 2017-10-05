@@ -65,5 +65,9 @@ export default {
         return resolve(course);
       });
     });
+  },
+
+  delete(id) {
+    return this.collection().doc(id).delete();
   }
 }
