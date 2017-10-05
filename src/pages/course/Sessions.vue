@@ -5,13 +5,15 @@
         Sessions
       </h3>
 
-      <v-btn primary @click="showForm = true" v-if="!showForm">
-        <v-icon left>add</v-icon>
-        Create
-      </v-btn>
-      <v-btn @click="showForm = false" v-if="showForm">
-        Cancel
-      </v-btn>
+      <div v-if="userIsTutor">
+        <v-btn primary @click="showForm = true" v-if="!showForm">
+          <v-icon left>add</v-icon>
+          Create
+        </v-btn>
+        <v-btn @click="showForm = false" v-if="showForm">
+          Cancel
+        </v-btn>
+      </div>
     </div>
 
     <div class="card__front" v-show="!showForm">
@@ -139,6 +141,9 @@
       }
     },
     computed: {
+      userIsTutor() {
+        return this.$currentUser.id === this.course.tutor.id;
+      },
       course() {
         return this.$parent.course;
       },
