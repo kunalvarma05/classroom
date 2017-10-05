@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import Firebase from '../lib/Firebase';
+  import courseService from '../store/Course';
   import sessionService from '../store/Session';
   import Stream from '../components/classroom/Stream'
   import Slides from '../components/classroom/Slides'
@@ -48,33 +48,67 @@
       return {
         drawer: false,
         activeTab: "stream",
-        course: false,
-        sessionEnded: false
+        sessionEnded: false,
+        session: false,
+        loading: false
       }
     },
     created() {
-      if (this.userIsTutor) {
-        Firebase.instance().database().ref('courses').child(this.courseTutorId).child(this.courseId).once('value').then((snapshot) => {
-          const course = snapshot.val();
-          this.course = course;
-        });
-      }
+      this.fetchSession();
     },
     computed: {
       userIsTutor() {
-        return this.$currentUser.id === this.courseTutorId;
+        return this.$currentUser.id === this.tutorId;
+      },
+      slug() {
+        return this.$route.params.slug;
+      },
+      course() {
+        if (this.session) {
+          return this.session.course;
+        }
+
+        return false;
       },
       courseId() {
-        return this.$route.params.slug;
+        if (this.course) {
+          return this.course.id;
+        }
+
+        return false;
       },
-      courseTutorId() {
-        return this.$route.params.slug;
+      tutor() {
+        if (this.course && this.course.tutor) {
+          return this.course.tutor;
+        }
+
+        return false;
+      },
+      tutorId() {
+        if (this.tutor) {
+          return this.tutor.id;
+        }
+
+        return false;
       }
     },
     methods: {
       tabIsActive(tab) {
         return this.activeTab === tab;
       },
+      fetchSession() {
+        this.loading = true;
+
+        sessionService.find(this.slug, ['course']).then((session) => {
+          this.session = session;
+
+          courseService.find(this.session.course.id, ['tutor', 'students']).then((course) => {
+            this.session.course = course;
+            this.loading = false;
+          });
+
+        });
+      }
     },
     components: {
       Stream,
