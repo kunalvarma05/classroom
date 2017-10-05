@@ -1,12 +1,11 @@
 <template>
-  <v-app id="dashboard" class="dashboard-page" toolbar dark>
+  <v-app id="dashboard" class="dashboard-page" toolbar :dark="darkTheme">
     <v-navigation-drawer
       persistent
       disable-route-watcher
       v-model="drawer"
-      light
       absolute
-      dark
+      :dark="darkTheme"
     >
       <v-list>
         <v-list-tile @click="">
@@ -19,10 +18,11 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar dark fixed>
+    <v-toolbar :dark="darkTheme" fixed>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <span class="title">
-        <img src="../assets/images/logo.svg" alt="Classroom" class="logo">
+        <img src="../assets/images/logo.svg" alt="Classroom" class="logo" v-if="darkTheme">
+        <img src="../assets/images/logo-blue.svg" alt="Classroom" class="logo" v-if="!darkTheme">
       </span>
     </v-toolbar>
     <main>
@@ -63,7 +63,8 @@
       return {
         drawer: false,
         notification: false,
-        showNotification: false
+        showNotification: false,
+        darkTheme: false
       };
     },
     computed: {
