@@ -1,20 +1,66 @@
-import Firebase from "../lib/Firebase";
+import courseService from './Course';
+import FireStore from "../lib/FireStore";
 
 export default {
   db() {
-    return Firebase.instance().database();
+    return FireStore.instance();
   },
 
-  notifyStudents(tutor, course) {
-    return this.db().ref('/sessions').child(course.id).set({
-      message: tutor.name + " has started a session for the course: " + course.courseName,
-      course: course,
-      tutor: tutor,
-      type: "session_start"
+  collection() {
+    return this.db().collection('sessions');
+  },
+
+  all(references = ['course']) {
+    return this.collection().get().then((collection) => {
+      return FireStore.resolveCollectionItems(collection, references);
     });
   },
 
-  endSession(id) {
-    return this.db().ref('/sessions').child(id).remove();
+  getAllByCourseID(course_id, references = ['course']) {
+    return this.collection().where('course', '==', courseService.doc(course_id))
+      .get().then((collection) => {
+        return FireStore.resolveCollectionItems(collection, references);
+      });
+  },
+
+  find(id, references = ['course']) {
+    return this.collection().doc(id).get().then((doc) => {
+      let docData = FireStore.getDocData(doc);
+      return FireStore.getResolvableForItemReferences(docData, references);
+    });
+  },
+
+  create(name, description, scheduled_at, course_id) {
+    return new Promise((resolve, reject) => {
+      let courseRef = courseService.doc(course_id);
+      let sessionRef = this.collection().doc();
+      let sessionId = sessionRef.id;
+
+      let sessionObj = {
+        id: sessionId,
+        name: name,
+        description: description,
+        scheduled_at: scheduled_at,
+        course: courseRef
+      };
+
+      sessionRef.set(sessionObj).then(() => {
+        return resolve(sessionObj);
+      });
+    });
+  },
+
+  update(id, session) {
+    return new Promise((resolve, reject) => {
+      let sessionRef = this.collection().doc(id);
+
+      sessionRef.update(session).then(() => {
+        return resolve(session);
+      });
+    });
+  },
+
+  delete(id) {
+    return this.collection().doc(id).delete();
   }
 }
