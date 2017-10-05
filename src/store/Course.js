@@ -111,5 +111,21 @@ export default {
         });
       });
     });
+  },
+
+  studentIsEnrolled(course_id, student_id) {
+    return new Promise((resolve, reject) => {
+      this.find(course_id, ['students']).then((course) => {
+        let retVal = false;
+
+        if (course.students && course.students.length) {
+          retVal = course.students.some((student) => {
+            return student.id === student_id;
+          });
+        }
+
+        resolve(retVal);
+      });
+    });
   }
 }
