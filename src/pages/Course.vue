@@ -30,14 +30,44 @@
               </v-layout>
             </v-container>
           </v-card-media>
-          <v-card-actions>
-            <v-btn primary>Start Session</v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-          <v-slide-y-transition>
+
+          <div class="card__front" v-if="!editing">
+            <v-card-actions>
+              <v-btn @click="editCourse">
+                <v-icon left>edit</v-icon>
+                Edit
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn primary>
+                <v-icon left>add</v-icon>
+                Create new Session
+              </v-btn>
+            </v-card-actions>
             <v-card-text>
               {{course.description}}
             </v-card-text>
+          </div>
+          <v-slide-y-transition>
+            <div class="card__back container fluid" v-if="editing">
+              <v-form v-model="valid">
+                <v-text-field
+                  label="Name"
+                  v-model="course.name"
+                  :counter="255"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  label="description"
+                  v-model="course.description"
+                  :counter="700"
+                  multiLine
+                  :rows="8"
+                  required
+                ></v-text-field>
+
+                <v-btn :loading="updating" primary @click="updateCourse">Update</v-btn>
+              </v-form>
+            </div>
           </v-slide-y-transition>
         </v-card>
       </v-flex>
@@ -60,7 +90,10 @@
     data() {
       return {
         course: false,
-        loading: false
+        loading: false,
+        editing: false,
+        updating: false,
+        valid: false
       }
     },
     computed: {
@@ -92,6 +125,17 @@
         courseService.find(this.slug).then((course) => {
           this.course = course;
           this.loading = false;
+        })
+      },
+      editCourse() {
+        this.editing = true;
+      },
+      updateCourse() {
+        this.updating = true;
+        courseService.update(this.course.id, this.course).then((course) => {
+          this.course = course;
+          this.updating = false;
+          this.editing = false;
         })
       }
     }
