@@ -50,9 +50,27 @@
         Edit
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn flat class="red--text" @click="deleteCourse" :loading="deleting">
-        Delete
-      </v-btn>
+      <v-menu
+        :close-on-content-click="false"
+        :nudge-width="150"
+        left
+        offset-y
+        top
+      >
+        <v-btn slot="activator" flat class="red--text">
+          Delete
+        </v-btn>
+        <v-list>
+          <v-list-tile @click="deleteCourse">
+            <v-list-tile-action v-if="deleting">
+              <v-progress-circular indeterminate class="red--text"></v-progress-circular>
+            </v-list-tile-action>
+            <v-list-tile-title>
+              Delete Permanently?
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-card-actions>
   </div>
 </template>
