@@ -55,4 +55,15 @@ export default {
       });
     });
   },
+
+  update(id, course) {
+    return new Promise((resolve, reject) => {
+      let courseRef = this.collection().doc(id);
+      course.alias = Utils.abbreviate(course.name, 3);
+
+      courseRef.update(course).then(() => {
+        return resolve(course);
+      });
+    });
+  }
 }
