@@ -8,7 +8,7 @@
           <v-card class="add-course-card">
             <v-card-text class="text-xs-center">
               <span v-if="!addingCourse && !addCourseVisible">Create Course</span>
-              <v-btn fab small class="primary" @click='addCourseVisible = true' v-if='!addCourseVisible'>
+              <v-btn fab small class="primary white--text" @click='addCourseVisible = true' v-if='!addCourseVisible'>
                 <v-icon>add</v-icon>
               </v-btn>
               <v-text-field v-if='addCourseVisible' v-model='courseName' label="Name" required :disabled="addingCourse"
@@ -36,7 +36,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat small>
+              <v-btn flat small @click="$router.push({ name: 'show-course', params: { slug: course.id } })">
                 View
               </v-btn>
             </v-card-actions>
