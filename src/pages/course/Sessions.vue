@@ -33,7 +33,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat small @click="$router.push({ name: 'show-session', params: { slug: session.id } })">
+              <v-btn flat small @click="$router.push({ name: 'classroom', params: { slug: session.id } })">
                 View
               </v-btn>
             </v-card-actions>

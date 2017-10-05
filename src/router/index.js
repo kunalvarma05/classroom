@@ -36,7 +36,7 @@ const router = new Router({
           component: DashboardMain
         },
         {
-          path: 'classroom/:tutor_id/:course_id',
+          path: 'classroom/:slug',
           name: 'classroom',
           component: Classroom,
         },

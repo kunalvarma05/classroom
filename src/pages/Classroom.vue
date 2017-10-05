@@ -65,10 +65,10 @@
         return this.$currentUser.id === this.courseTutorId;
       },
       courseId() {
-        return this.$route.params.course_id;
+        return this.$route.params.slug;
       },
       courseTutorId() {
-        return this.$route.params.tutor_id;
+        return this.$route.params.slug;
       }
     },
     methods: {
