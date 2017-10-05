@@ -113,6 +113,46 @@ export default {
     });
   },
 
+  unroll(course_id, student_id) {
+    return new Promise((resolve, reject) => {
+      let studentRef = userService.doc(student_id);
+      this.find(course_id).then((course) => {
+        let courseStudents = course.students;
+
+        if (!courseStudents || !courseStudents.length) {
+          courseStudents = [];
+        }
+
+        // Remove the student
+        course.students = courseStudents.filter((student) => {
+          return student.id !== student_id;
+        });
+
+        this.update(course_id, course).then((course) => {
+          let courseRef = this.doc(course_id);
+
+          // Add the course to the list of the student's courses
+          userService.find(student_id).then((student) => {
+            let studentCourses = student.courses;
+
+            if (!studentCourses || !studentCourses.length) {
+              studentCourses = [];
+            }
+
+            // Remove the student
+            student.courses = studentCourses.filter((course) => {
+              return course.id !== course_id;
+            });
+
+            userService.update(student_id, student).then((user) => {
+              resolve(course);
+            })
+          });
+        });
+      });
+    });
+  },
+
   studentIsEnrolled(course_id, student_id) {
     return new Promise((resolve, reject) => {
       this.find(course_id, ['students']).then((course) => {

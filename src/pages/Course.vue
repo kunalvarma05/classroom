@@ -39,17 +39,17 @@
                     <v-btn v-if="!isEnrolled" primary @click="enroll" block>
                       <v-progress-circular indeterminate v-if='signingUp'></v-progress-circular>
                       <span v-if='!signingUp'>
-                          <v-icon left>add</v-icon>
-                          Enroll
-                        </span>
+                        <v-icon left>add</v-icon>
+                        Enroll
+                      </span>
                     </v-btn>
 
-                    <v-btn v-if="isEnrolled" @click="" block>
-                      <v-progress-circular indeterminate v-if='false'></v-progress-circular>
-                      <span v-if='!signingUp'>
-                          <v-icon left>done</v-icon>
-                          Enrolled
-                        </span>
+                    <v-btn v-if="isEnrolled" @click="unroll" block>
+                      <v-progress-circular indeterminate v-if='unrolling'></v-progress-circular>
+                      <span v-if='!unrolling'>
+                        <v-icon left>done</v-icon>
+                        Enrolled
+                      </span>
                     </v-btn>
 
                   </v-flex>
@@ -122,7 +122,8 @@
         loading: false,
         fetchingEnrollmentStatus: false,
         isEnrolled: false,
-        signingUp: false
+        signingUp: false,
+        unrolling: false
       }
     },
     computed: {
@@ -203,7 +204,19 @@
           this.fetchingEnrollmentStatus = false;
           this.isEnrolled = enrolled;
         });
-      }
+      },
+      unroll() {
+        this.unrolling = true;
+
+        courseService.unroll(this.course.id, this.$currentUser.id).then((course) => {
+          this.unrolling = false;
+          this.isEnrolled = false;
+          // remove the user
+          this.course.students = this.course.students.filter((student) => {
+            return student.id !== this.$currentUser.id;
+          })
+        });
+      },
     }
   }
 </script>
