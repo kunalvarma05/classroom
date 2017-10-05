@@ -78,22 +78,37 @@ export default {
 
   enroll(course_id, student_id) {
     return new Promise((resolve, reject) => {
-        let studentRef = userService.doc(student_id);
-        this.find(course_id, ['students']).then((course) => {
-          let courseStudents = course.students;
+      let studentRef = userService.doc(student_id);
+      this.find(course_id, ['students']).then((course) => {
+        let courseStudents = course.students;
 
-          if (!courseStudents || !courseStudents.length) {
-            courseStudents = [];
-          }
+        if (!courseStudents || !courseStudents.length) {
+          courseStudents = [];
+        }
 
-          courseStudents.push(studentRef);
+        courseStudents.push(studentRef);
+        course.students = courseStudents;
 
-          course.students = courseStudents;
+        this.update(course_id, course).then((course) => {
+          let courseRef = this.doc(course_id);
 
-          this.update(course_id, course).then((course) => {
-            resolve(course);
+          // Add the course to the list of the student's courses
+          userService.find(student_id, ['courses']).then((student) => {
+            let studentCourses = student.courses;
+
+            if (!studentCourses || !studentCourses.length) {
+              studentCourses = [];
+            }
+
+            studentCourses.push(courseRef);
+            student.courses = studentCourses;
+
+            userService.update(student_id, student).then((user) => {
+              resolve(course);
+            })
           });
         });
       });
+    });
   }
 }
