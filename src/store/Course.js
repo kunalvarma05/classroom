@@ -36,11 +36,19 @@ export default {
     });
   },
 
-  create(id, course) {
+  create(name, tutor_id) {
     return new Promise((resolve, reject) => {
-      this.collection().doc(id).set(course).then(() => {
-        course.id = id;
-        return resolve(course);
+      let tutorRef = userService.doc(tutor_id);
+      let courseRef = this.collection().doc();
+      let courseId = courseRef.id;
+      let courseObj = {
+        id: courseId,
+        name: name,
+        tutor: tutorRef
+      };
+
+      courseRef.set(courseObj).then(() => {
+        return resolve(courseObj);
       });
     });
   },
