@@ -30,9 +30,28 @@
                         <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
                       </v-avatar>
                       <span class="pl-2">
-                          {{course.tutor.name}}
-                        </span>
+                        {{course.tutor.name}}
+                      </span>
                     </div>
+                  </v-flex>
+                  <v-flex v-if="userIsStudent && !fetchingEnrollmentStatus" align-center justify-end lg2 md2 sm12 xs12
+                          class="is-flexbox">
+                    <v-btn v-if="!isEnrolled" primary @click="enroll" block>
+                      <v-progress-circular indeterminate v-if='signingUp'></v-progress-circular>
+                      <span v-if='!signingUp'>
+                          <v-icon left>add</v-icon>
+                          Enroll
+                        </span>
+                    </v-btn>
+
+                    <v-btn v-if="isEnrolled" @click="" block>
+                      <v-progress-circular indeterminate v-if='false'></v-progress-circular>
+                      <span v-if='!signingUp'>
+                          <v-icon left>done</v-icon>
+                          Enrolled
+                        </span>
+                    </v-btn>
+
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -91,12 +110,19 @@
     },
     name: 'course',
     created() {
-      this.fetchCourse();
+      this.fetchCourse().then((course) => {
+        if (this.userIsStudent) {
+          this.checkEnrollmentStatus();
+        }
+      });
     },
     data() {
       return {
         course: false,
-        loading: false
+        loading: false,
+        fetchingEnrollmentStatus: false,
+        isEnrolled: false,
+        signingUp: false
       }
     },
     computed: {
@@ -128,12 +154,15 @@
         }
 
         return "https://images.unsplash.com/photo-1497733942558-e74c87ef89db?dpr=1&auto=compress,format&fit=crop&w=800";
+      },
+      userIsStudent() {
+        return this.$currentUser.role === "student";
       }
     },
     methods: {
       fetchCourse() {
         this.loading = true;
-        courseService.find(this.slug, ['tutor', 'students']).then((course) => {
+        return courseService.find(this.slug, ['tutor', 'students']).then((course) => {
           this.course = course;
           this.loading = false;
         })
@@ -157,6 +186,22 @@
           this.course = course;
           this.editing = false;
           this.updating = false;
+        });
+      },
+      enroll() {
+        this.signingUp = true;
+
+        courseService.enroll(this.course.id, this.$currentUser.id).then(() => {
+          this.signingUp = false;
+          this.isEnrolled = true;
+          this.course.students.push(this.$currentUser);
+        });
+      },
+      checkEnrollmentStatus() {
+        this.fetchingEnrollmentStatus = true;
+        courseService.studentIsEnrolled(this.course.id, this.$currentUser.id).then((enrolled) => {
+          this.fetchingEnrollmentStatus = false;
+          this.isEnrolled = enrolled;
         });
       }
     }

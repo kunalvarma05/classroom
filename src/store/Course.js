@@ -80,7 +80,7 @@ export default {
   enroll(course_id, student_id) {
     return new Promise((resolve, reject) => {
       let studentRef = userService.doc(student_id);
-      this.find(course_id, ['students']).then((course) => {
+      this.find(course_id).then((course) => {
         let courseStudents = course.students;
 
         if (!courseStudents || !courseStudents.length) {
@@ -94,7 +94,7 @@ export default {
           let courseRef = this.doc(course_id);
 
           // Add the course to the list of the student's courses
-          userService.find(student_id, ['courses']).then((student) => {
+          userService.find(student_id).then((student) => {
             let studentCourses = student.courses;
 
             if (!studentCourses || !studentCourses.length) {

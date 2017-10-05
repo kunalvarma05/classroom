@@ -72,16 +72,6 @@
         </v-list>
       </v-menu>
     </v-card-actions>
-    <v-card-actions v-if="userIsStudent">
-      <v-spacer />
-      <v-btn primary @click="enroll">
-        <v-progress-circular indeterminate v-if='signingUp'></v-progress-circular>
-        <span v-if='!signingUp'>
-          <v-icon left>done</v-icon>
-          Sign me up
-        </span>
-      </v-btn>
-    </v-card-actions>
   </div>
 </template>
 
@@ -100,8 +90,7 @@
         loading: false,
         editing: false,
         updating: false,
-        deleting: false,
-        signingUp: false
+        deleting: false
       }
     },
     computed: {
@@ -175,14 +164,6 @@
 
         courseService.delete(this.course.id).then(() => {
           this.deleting = false;
-          this.$router.push({name: 'courses'});
-        });
-      },
-      enroll() {
-        this.signingUp = true;
-
-        courseService.enroll(this.course.id, this.$currentUser.id).then(() => {
-          this.signingUp = false;
           this.$router.push({name: 'courses'});
         });
       }
