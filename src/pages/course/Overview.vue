@@ -44,7 +44,7 @@
       </div>
     </v-slide-y-transition>
 
-    <v-card-actions v-if="!editing">
+    <v-card-actions v-if="!editing && userIsAuthorised">
       <v-btn @click="editCourse">
         <v-icon left>edit</v-icon>
         Edit
@@ -72,6 +72,16 @@
         </v-list>
       </v-menu>
     </v-card-actions>
+    <v-card-actions v-if="userIsStudent">
+      <v-spacer />
+      <v-btn primary @click="enroll">
+        <v-progress-circular indeterminate v-if='signingUp'></v-progress-circular>
+        <span v-if='!signingUp'>
+          <v-icon left>done</v-icon>
+          Sign me up
+        </span>
+      </v-btn>
+    </v-card-actions>
   </div>
 </template>
 
@@ -90,7 +100,8 @@
         loading: false,
         editing: false,
         updating: false,
-        deleting: false
+        deleting: false,
+        signingUp: false
       }
     },
     computed: {
@@ -129,7 +140,13 @@
         }
 
         return "https://images.unsplash.com/photo-1497733942558-e74c87ef89db?dpr=1&auto=compress,format&fit=crop&w=800";
-      }
+      },
+      userIsAuthorised() {
+        return this.$currentUser.role === "tutor" && this.$currentUser.id === this.course.tutor.id;
+      },
+      userIsStudent() {
+        return this.$currentUser.role === "student";
+      },
     },
     methods: {
       editCourse() {
@@ -160,6 +177,14 @@
           this.deleting = false;
           this.$router.push({name: 'courses'});
         });
+      },
+      enroll() {
+        this.signingUp = true;
+
+        courseService.enroll(this.course.id, this.$currentUser.id).then(() => {
+          this.signingUp = false;
+          this.$router.push({name: 'courses'});
+        });
       }
     }
   }
@@ -171,4 +196,3 @@
     .card__actions
       padding: 16px;
 </style>
-

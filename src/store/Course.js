@@ -70,5 +70,26 @@ export default {
 
   delete(id) {
     return this.collection().doc(id).delete();
+  },
+
+  enroll(course_id, student_id) {
+    return new Promise((resolve, reject) => {
+        let studentRef = userService.doc(student_id);
+        this.find(course_id, ['students']).then((course) => {
+          let courseStudents = course.students;
+
+          if (!courseStudents || !courseStudents.length) {
+            courseStudents = [];
+          }
+
+          courseStudents.push(studentRef);
+
+          course.students = courseStudents;
+
+          this.update(course_id, course).then((course) => {
+            resolve(course);
+          });
+        });
+      });
   }
 }

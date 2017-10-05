@@ -1,10 +1,15 @@
 <template>
   <v-container class="courses-page">
     <h4>Courses</h4>
+    <v-layout justify-end>
+      <v-btn @click='getAllCourses'>All courses</v-btn>
+      <v-btn @click='fetchCourses'>My courses</v-btn>
+    </v-layout>
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
+    <p v-if='!loading && !userIsTutor && !courses'>Seems like you have not enrolled in any courses.</p>
     <v-container grid-list-md v-if='!loading'>
       <v-layout wrap>
-        <v-flex lg3 md4 sm12 xs12>
+        <v-flex lg3 md4 sm12 xs12 v-if='userIsTutor && viewingMyCourses'>
           <v-card class="add-course-card">
             <v-card-text class="text-xs-center">
               <span v-if="!addingCourse && !addCourseVisible">Create Course</span>
@@ -64,13 +69,25 @@
         courses: null,
         addCourseVisible: false,
         addingCourse: false,
-        courseName: ""
+        courseName: "",
+        viewingMyCourses: true
       };
+    },
+    computed: {
+      userIsTutor() {
+        return this.$currentUser.role === "tutor";
+      },
     },
     methods: {
       fetchCourses() {
-        courseService.getAllByTutorID(this.$currentUser.id).then((courses) => {
+        this.loading = true;
+
+        let id = this.$currentUser.id;
+        let request = this.userIsTutor ? courseService.getAllByTutorID(id) : courseService.getAllByStudentID(id);
+
+        request.then((courses) => {
           this.courses = courses;
+          this.viewingMyCourses = true;
           this.loading = false;
         });
       },
@@ -82,6 +99,14 @@
           this.courseName = "";
           this.addCourseVisible = false;
         });
+      },
+      getAllCourses() {
+        this.loading = true;
+        courseService.all().then(courses => {
+          this.viewingMyCourses = false;
+          this.courses = courses;
+          this.loading = false;
+        })
       }
     }
   }
