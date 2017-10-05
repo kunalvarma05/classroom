@@ -4,25 +4,21 @@
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
     <v-container grid-list-md v-if='!loading'>
       <v-layout wrap>
-        <v-flex xs3>
-          <v-card>
+        <v-flex lg3 md4 sm12 xs12>
+          <v-card class="add-course-card">
             <v-card-text class="text-xs-center">
               <span v-if="!addingCourse && !addCourseVisible">Create Course</span>
               <v-btn fab small class="primary" @click='addCourseVisible = true' v-if='!addCourseVisible'>
                 <v-icon>add</v-icon>
               </v-btn>
               <v-text-field v-if='addCourseVisible' v-model='courseName' label="Name" required :disabled="addingCourse"
-                            @keyup.enter.prevent="addCourse"></v-text-field>
+                            @keyup.enter="addCourse"></v-text-field>
             </v-card-text>
             <v-divider v-if='addCourseVisible'></v-divider>
             <v-card-actions v-if="addCourseVisible && addingCourse">
               <v-progress-circular small right indeterminate class="grey--text"></v-progress-circular>
             </v-card-actions>
             <v-card-actions v-if='addCourseVisible && !addingCourse'>
-              <v-spacer></v-spacer>
-              <v-btn icon @click.native='addCourse' type="submit">
-                <v-icon>done</v-icon>
-              </v-btn>
               <v-btn icon @click.native='addCourseVisible = false'>
                 <v-icon>cancel</v-icon>
               </v-btn>
@@ -30,7 +26,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs3 v-for='course in courses' :key='course.id'>
+        <v-flex lg3 md4 sm6 xs12 v-for='course in courses' :key='course.id'>
           <v-card>
             <v-card-title primary-title>
               <h6 class="mb-0">
@@ -79,10 +75,23 @@
         });
       },
       addCourse() {
+        this.addingCourse = true;
         courseService.create(this.courseName, this.$currentUser.id).then((course) => {
           this.courses.unshift(course);
+          this.addingCourse = false;
+          this.courseName = "";
+          this.addCourseVisible = false;
         });
       }
     }
   }
 </script>
+
+<style lang="stylus">
+  .add-course-card
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100% !important;
+    width: 100%;
+</style>
