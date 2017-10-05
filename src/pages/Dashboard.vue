@@ -10,12 +10,20 @@
       :dark="darkTheme"
     >
       <v-list>
-        <v-list-tile @click="">
+        <v-list-tile @click="$router.push({ name: 'dashboard' })">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="$router.push({ name: 'courses' })">
+          <v-list-tile-action>
+            <v-icon>book</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Courses</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
