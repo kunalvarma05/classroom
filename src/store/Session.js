@@ -41,6 +41,7 @@ export default {
         name: name,
         description: description,
         scheduled_at: scheduled_at,
+        status: "scheduled",
         course: courseRef
       };
 
