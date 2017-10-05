@@ -35,8 +35,8 @@
             <div class="card--inside">
 
               <div>
-                <v-tabs v-model="selectedTab" centered class="course-tabs">
-                  <v-tabs-bar class="white">
+                <v-tabs dark v-model="selectedTab" centered class="course-tabs">
+                  <v-tabs-bar class="primary darken-3">
                     <v-tabs-item
                       href="#show-course"
                       ripple
@@ -50,7 +50,7 @@
                       Sessions
                     </v-tabs-item>
 
-                    <v-tabs-slider class="primary"></v-tabs-slider>
+                    <v-tabs-slider class="white"></v-tabs-slider>
                   </v-tabs-bar>
                 </v-tabs>
               </div>
