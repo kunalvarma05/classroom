@@ -96,7 +96,7 @@ export default class FireStore {
     // Loop over all items
     items.forEach((item) => {
       // Get resolvable for each item and it's references
-      let resolvable = FireStore.getResolvablesForItem(item, references);
+      let resolvable = FireStore.getResolvableForItemReferences(item, references);
 
       // Push a promise to itemResolvables that resolves
       // all the reference resolvables
@@ -113,7 +113,7 @@ export default class FireStore {
    * @param {Array} references
    * @return {Promise}
    */
-  static getResolvablesForItem(item, references) {
+  static getResolvableForItemReferences(item, references) {
     // This will be an array containing all the resolvables
     // (Promises) of the item references (Properties) passed.
     let resolvables = [];
@@ -150,7 +150,7 @@ export default class FireStore {
       if (Utils.isIterable(itemRef)) {
         // Push a Promise to fetch data of the reference and when resolving,
         // swap the item's reference with the reference data.
-        resolvables.push(FireStore.getResolvablesForItem(itemRef, itemRef.length));
+        resolvables.push(FireStore.getResolvableForItemReferences(itemRef, itemRef.length));
       } else {
         // Push a Promise to fetch data of the reference and when resolving,
         // swap the item's reference with the reference data.
