@@ -5,6 +5,8 @@
       disable-route-watcher
       v-model="drawer"
       absolute
+      mini-variant
+      clipped
       :dark="darkTheme"
     >
       <v-list>
@@ -61,7 +63,7 @@
     },
     data() {
       return {
-        drawer: false,
+        drawer: true,
         notification: false,
         showNotification: false,
         darkTheme: false
