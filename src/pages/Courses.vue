@@ -6,6 +6,7 @@
       <v-btn @click='fetchCourses'>My courses</v-btn>
     </v-layout>
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
+    <p v-if='!loading && !userIsTutor && !courses'>Seems like you have not enrolled in any courses.</p>
     <v-container grid-list-md v-if='!loading'>
       <v-layout wrap>
         <v-flex lg3 md4 sm12 xs12 v-if='userIsTutor && viewingMyCourses'>
@@ -80,7 +81,11 @@
     methods: {
       fetchCourses() {
         this.loading = true;
-        courseService.getAllByTutorID(this.$currentUser.id).then((courses) => {
+
+        let id = this.$currentUser.id;
+        let request = this.userIsTutor ? courseService.getAllByTutorID(id) : courseService.getAllByStudentID(id);
+
+        request.then((courses) => {
           this.courses = courses;
           this.viewingMyCourses = true;
           this.loading = false;
