@@ -62,21 +62,18 @@ export default class FireStore {
       // Get collection items data
       let items = FireStore.getCollectionItemsData(collection);
 
-      let resolvablesForItems = [];
-
       // If references are to be resolved
       if (references.length) {
         // Get item resolvables (Is that even a word? :/)
-        resolvablesForItems = FireStore.getResolvablesForItems(items, references);
-      } else {
-        // No references to resolve.
-        resolvablesForItems.push(items);
+        let resolvablesForItems = FireStore.getResolvablesForItems(items, references);
+
+        // Promise that resolves with all the items
+        return Promise.all(resolvablesForItems).then((itemsResolved) => {
+          resolve(itemsResolved);
+        });
       }
 
-      // Promise that resolves with all the items
-      return Promise.all(resolvablesForItems).then((itemsResolved) => {
-        resolve(itemsResolved);
-      });
+      resolve(items);
     });
   }
 
