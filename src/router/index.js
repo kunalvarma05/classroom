@@ -6,7 +6,9 @@ import Courses from '../pages/Courses'
 import Dashboard from '../pages/Dashboard'
 import Classroom from '../pages/Classroom'
 import Mappings from './middlewares/mappings'
+import Sessions from '../pages/course/Sessions'
 import DashboardMain from '../pages/DashboardMain'
+import CourseOverview from '../pages/course/Overview'
 
 Vue.use(Router);
 
@@ -44,8 +46,19 @@ const router = new Router({
         },
         {
           path: 'courses/:slug',
-          name: 'show-course',
-          component: Course
+          component: Course,
+          children: [
+            {
+              path: '/',
+              name: 'show-course',
+              component: CourseOverview
+            },
+            {
+              path: 'sessions',
+              name: 'course-sessions',
+              component: Sessions
+            }
+          ]
         }
       ]
     }
