@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page text-xs-center">
+  <v-app id="homepage" class="home-page text-xs-center fill-height" dark>
     <v-container fluid>
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
       <img src="../assets/images/logo.svg" :alt="title">
@@ -8,13 +8,14 @@
         <v-progress-circular indeterminate class="primary--text" v-if='loading'></v-progress-circular>
       </div>
     </v-container>
-  </div>
+  </v-app>
 </template>
 
 <script>
   import Signup from '../components/Signup';
   import userService from '../store/User';
   import Firebase from '../lib/Firebase';
+  import VApp from "../../node_modules/vuetify/src/components/VApp/VApp.vue";
 
   export default {
     name: 'home',
@@ -25,6 +26,7 @@
       }
     },
     components: {
+      VApp,
       Signup
     }
   }
