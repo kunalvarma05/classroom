@@ -49,12 +49,16 @@
           </div>
           <v-slide-y-transition>
             <div class="card__back container fluid" v-if="editing">
-              <v-form v-model="valid">
+              <v-form>
                 <v-text-field
                   label="Name"
                   v-model="course.name"
                   :counter="255"
                   required
+                  :error-messages="errors.collect('name')"
+                  v-validate="'required'"
+                  data-vv-name="name"
+                  :disabled="updating"
                 ></v-text-field>
                 <v-text-field
                   label="description"
@@ -63,9 +67,17 @@
                   multiLine
                   :rows="8"
                   required
+                  :error-messages="errors.collect('description')"
+                  v-validate="'required'"
+                  data-vv-name="description"
+                  :disabled="updating"
                 ></v-text-field>
 
-                <v-btn :loading="updating" primary @click="updateCourse">Update</v-btn>
+                <v-alert error icon="warning" :value="valid">
+                  Please fix all the errors.
+                </v-alert>
+
+                <v-btn :loading="updating" :disabled="valid" primary @click="validateAndUpdate">Update</v-btn>
                 <v-btn @click="editing = false">Cancel</v-btn>
               </v-form>
             </div>
@@ -85,6 +97,7 @@
   export default {
     components: {VCardMedia},
     name: 'course',
+    $validates: true,
     created() {
       this.fetchCourse();
     },
@@ -93,11 +106,17 @@
         course: false,
         loading: false,
         editing: false,
-        updating: false,
-        valid: false
+        updating: false
       }
     },
     computed: {
+      valid() {
+        if (this.errors.count() > 0) {
+          return true;
+        }
+
+        return false;
+      },
       slug() {
         return this.$route.params.slug;
       },
@@ -131,13 +150,23 @@
       editCourse() {
         this.editing = true;
       },
-      updateCourse() {
+      validateAndUpdate() {
         this.updating = true;
+
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            this.updateCourse();
+          } else {
+            this.updating = false;
+          }
+        });
+      },
+      updateCourse() {
         courseService.update(this.course.id, this.course).then((course) => {
           this.course = course;
-          this.updating = false;
           this.editing = false;
-        })
+          this.updating = false;
+        });
       }
     }
   }
