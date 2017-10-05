@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../pages/Home'
+import Course from '../pages/Course'
 import Courses from '../pages/Courses'
 import Dashboard from '../pages/Dashboard'
 import Classroom from '../pages/Classroom'
@@ -39,7 +40,12 @@ const router = new Router({
         {
           path: 'courses',
           name: 'courses',
-          component: Courses
+          component: Courses,
+        },
+        {
+          path: 'courses/:slug',
+          name: 'show-course',
+          component: Course
         }
       ]
     }
