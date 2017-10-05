@@ -1,10 +1,14 @@
 <template>
   <v-container class="courses-page">
     <h4>Courses</h4>
+    <v-layout justify-content-end>
+      <v-btn>All courses</v-btn>
+      <v-btn>My courses</v-btn>
+    </v-layout>
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
     <v-container grid-list-md v-if='!loading'>
       <v-layout wrap>
-        <v-flex lg3 md4 sm12 xs12>
+        <v-flex lg3 md4 sm12 xs12 v-if='userIsTutor'>
           <v-card class="add-course-card">
             <v-card-text class="text-xs-center">
               <span v-if="!addingCourse && !addCourseVisible">Create Course</span>
@@ -66,6 +70,11 @@
         addingCourse: false,
         courseName: ""
       };
+    },
+    computed: {
+      userIsTutor() {
+        return this.$currentUser.role === "tutor";
+      },
     },
     methods: {
       fetchCourses() {

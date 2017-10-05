@@ -44,7 +44,7 @@
       </div>
     </v-slide-y-transition>
 
-    <v-card-actions v-if="!editing">
+    <v-card-actions v-if="!editing && userIsTutor">
       <v-btn @click="editCourse">
         <v-icon left>edit</v-icon>
         Edit
@@ -129,7 +129,10 @@
         }
 
         return "https://images.unsplash.com/photo-1497733942558-e74c87ef89db?dpr=1&auto=compress,format&fit=crop&w=800";
-      }
+      },
+      userIsTutor() {
+        return this.$currentUser.role === "tutor";
+      },
     },
     methods: {
       editCourse() {
@@ -171,4 +174,3 @@
     .card__actions
       padding: 16px;
 </style>
-
