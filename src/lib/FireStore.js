@@ -15,6 +15,12 @@ export default class FireStore {
   }
 
   static fetchDataFromReference(reference, defaultValue = null) {
+    if (typeof reference.get !== 'function') {
+      return new Promise((resolve, reject) => {
+        resolve(reference);
+      });
+    }
+
     return reference.get().then((doc) => {
       return FireStore.getDocData(doc, defaultValue);
     });
