@@ -1,10 +1,17 @@
 <template>
   <v-container class="courses-page">
-    <h4>Courses</h4>
-    <v-layout justify-end>
-      <v-btn @click='getAllCourses'>All courses</v-btn>
-      <v-btn @click='fetchCourses'>My courses</v-btn>
-    </v-layout>
+    <div class="is-flexbox align-center justify-space-between section-heading mb-4">
+      <h3 class="headline mb-0">
+        <span v-if="!viewingMyCourses">
+          All Courses
+        </span>
+        <span v-if="viewingMyCourses">
+          My Courses
+        </span>
+        <v-btn @click='fetchCourses' v-if="!viewingMyCourses" flat>My courses</v-btn>
+        <v-btn @click='getAllCourses' v-if="viewingMyCourses" flat>All courses</v-btn>
+      </h3>
+    </div>
     <v-progress-circular indeterminate v-if='loading'></v-progress-circular>
     <p v-if='!loading && !userIsTutor && !courses'>Seems like you have not enrolled in any courses.</p>
     <v-container grid-list-md v-if='!loading'>
