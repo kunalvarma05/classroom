@@ -28,11 +28,12 @@ export default {
       });
   },
 
-  getAllByStudentID(student_id, references = ['tutor']) {
-    return this.collection().where(`students.${student_id}`, '==', userService.doc(student_id))
-      .get().then((collection) => {
-        return FireStore.resolveCollectionItems(collection, references);
+  getAllByStudentID(student_id) {
+    return new Promise((resolve, reject) => {
+      userService.find(student_id, ['courses']).then((student) => {
+        resolve(student.courses);
       });
+    });
   },
 
   find(id, references = ['tutor']) {
