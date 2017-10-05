@@ -13,9 +13,16 @@ export default {
     return this.collection().doc(id);
   },
 
-  find(id) {
-    return this.doc(id).get().then((doc) => {
-      return FireStore.getDocData(doc);
+  all(references = []) {
+    return this.collection().get().then((collection) => {
+      return FireStore.resolveCollectionItems(collection, references);
+    });
+  },
+
+  find(id, references = []) {
+    return this.collection().doc(id).get().then((doc) => {
+      let docData = FireStore.getDocData(doc);
+      return FireStore.getResolvableForItemReferences(docData, references);
     });
   },
 
@@ -26,5 +33,19 @@ export default {
         return resolve(user);
       });
     });
-  }
+  },
+
+  update(id, user) {
+    return new Promise((resolve, reject) => {
+      let userRef = this.collection().doc(id);
+
+      userRef.update(user).then(() => {
+        return resolve(user);
+      });
+    });
+  },
+
+  delete(id) {
+    return this.collection().doc(id).delete();
+  },
 }
