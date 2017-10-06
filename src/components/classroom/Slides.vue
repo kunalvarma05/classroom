@@ -1,5 +1,5 @@
 <template>
-  <div class="slides-page">
+  <div class="slides-page section-page">
     <h1>Slides</h1>
   </div>
 </template>

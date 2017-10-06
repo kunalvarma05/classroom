@@ -1,7 +1,7 @@
 <template>
-  <div class="stream-page">
+  <div class="stream-page section-page">
     <div class="stream-message" v-if="!room">
-      <h2>Stream</h2>
+      <h1>Stream</h1>
 
       <div>
         <v-btn outline round :loading='!accessToken' @click='joinStream'
@@ -151,11 +151,6 @@
 </script>
 
 <style lang="stylus">
-  .stream-page
-    display: flex;
-    align-items: center;
-    height: calc(100vh - 170px);
-
   .stream-video
     height: calc(100vh - 170px);
     margin: auto;

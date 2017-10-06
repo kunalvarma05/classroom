@@ -1,5 +1,5 @@
 <template>
-  <div class="doubts-page">
+  <div class="doubts-page section-page">
     <h1>Doubts</h1>
   </div>
 </template>
