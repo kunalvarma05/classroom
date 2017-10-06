@@ -77,12 +77,10 @@
 
 <script>
   import courseService from '@/store/Course';
-  import VCardMedia from "vuetify/src/components/VCard/VCardMedia";
   import Utils from "@/lib/Utils";
 
 
   export default {
-    components: {VCardMedia},
     name: 'course-overview',
     $validates: true,
     data() {

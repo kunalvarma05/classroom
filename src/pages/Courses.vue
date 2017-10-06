@@ -62,10 +62,8 @@
 <script>
   import Firebase from '@/lib/Firebase'
   import courseService from '../store/Course';
-  import VIcon from "../../node_modules/vuetify/src/components/VIcon/VIcon.vue";
 
   export default {
-    components: {VIcon},
     name: 'courses',
     created() {
       this.fetchCourses();

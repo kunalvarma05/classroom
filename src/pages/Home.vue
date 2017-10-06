@@ -15,7 +15,6 @@
   import Signup from '../components/Signup';
   import userService from '../store/User';
   import Firebase from '../lib/Firebase';
-  import VApp from "../../node_modules/vuetify/src/components/VApp/VApp.vue";
 
   export default {
     name: 'home',
@@ -26,7 +25,6 @@
       }
     },
     components: {
-      VApp,
       Signup
     }
   }

@@ -114,11 +114,9 @@
 
 <script>
   import sessionService from '../../store/Session';
-  import VIcon from "../../../node_modules/vuetify/src/components/VIcon/VIcon.vue";
   import Utils from "../../lib/Utils";
 
   export default {
-    components: {VIcon},
     name: 'course-sessions',
     $validates: true,
     created() {

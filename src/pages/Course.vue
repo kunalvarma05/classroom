@@ -98,15 +98,13 @@
 
 <script>
   import courseService from '@/store/Course';
-  import VCardMedia from "vuetify/src/components/VCard/VCardMedia";
   import Utils from "@/lib/Utils";
   import CourseOverview from "./course/Overview.vue";
 
 
   export default {
     components: {
-      CourseOverview,
-      VCardMedia
+      CourseOverview
     },
     name: 'course',
     created() {
