@@ -1,42 +1,42 @@
 <template>
   <v-app id="dashboard" class="dashboard-page" toolbar :dark="darkTheme">
-    <v-navigation-drawer
-      persistent
-      disable-route-watcher
-      v-model="drawer"
-      absolute
-      mini-variant
-      floating
-      clipped
-      :dark="darkTheme"
-    >
-      <v-list>
-        <v-list-tile @click="$router.push({ name: 'dashboard' })">
-          <v-list-tile-action>
-            <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile @click="$router.push({ name: 'courses' })">
-          <v-list-tile-action>
-            <v-icon>book</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Courses</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
+    <!--<v-navigation-drawer-->
+    <!--persistent-->
+    <!--disable-route-watcher-->
+    <!--v-model="drawer"-->
+    <!--absolute-->
+    <!--mini-variant-->
+    <!--floating-->
+    <!--clipped-->
+    <!--:dark="darkTheme"-->
+    <!--&gt;-->
+    <!--<v-list>-->
+    <!--<v-list-tile @click="$router.push({ name: 'dashboard' })">-->
+    <!--<v-list-tile-action>-->
+    <!--<v-icon>home</v-icon>-->
+    <!--</v-list-tile-action>-->
+    <!--<v-list-tile-content>-->
+    <!--<v-list-tile-title>Home</v-list-tile-title>-->
+    <!--</v-list-tile-content>-->
+    <!--</v-list-tile>-->
+    <!--<v-list-tile @click="$router.push({ name: 'courses' })">-->
+    <!--<v-list-tile-action>-->
+    <!--<v-icon>book</v-icon>-->
+    <!--</v-list-tile-action>-->
+    <!--<v-list-tile-content>-->
+    <!--<v-list-tile-title>Courses</v-list-tile-title>-->
+    <!--</v-list-tile-content>-->
+    <!--</v-list-tile>-->
+    <!--</v-list>-->
+    <!--</v-navigation-drawer>-->
 
 
     <v-toolbar :dark="darkTheme" fixed>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <span class="title">
+      <!--<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>-->
+      <router-link class="title" :to="{name: 'dashboard'}">
         <img src="../assets/images/logo.svg" alt="Classroom" class="logo" v-if="darkTheme">
         <img src="../assets/images/logo-blue.svg" alt="Classroom" class="logo" v-if="!darkTheme">
-      </span>
+      </router-link>
 
       <v-spacer></v-spacer>
       <v-menu

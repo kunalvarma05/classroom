@@ -11,7 +11,7 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="tutorDisconnected" class="stream-waiting">
+    <div v-if=" tutorDisconnected" class="stream-waiting">
       <h4>Don't panic kiddos...</h4>
       <h6>
         Looks like the Tutor got disconnected. Waiting for the tutor to connect...
@@ -129,23 +129,14 @@
         document.getElementById('stream-tracks').innerHTML = "";
       },
       endSession() {
-        this.session.status = "ended";
-        sessionSerivce.update(this.session.id, this.session).then((updatedSession) => {
-          this.session = updatedSession;
-          this.room.disconnect();
-        });
-      },
-      sessionEnded() {
-        const course_id = snapshot.key;
-
-        if (this.courseId === course_id) {
+        this.$parent.session.status = "ended";
+        sessionSerivce.end(this.$parent.session.id).then((updatedSession) => {
+          this.$parent.session = updatedSession;
           this.room.disconnect();
           this.sessionEnded = true;
-
           this.tutorDisconnected = false;
-
-        }
-      }
+        });
+      },
     }
   }
 </script>

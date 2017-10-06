@@ -33,7 +33,7 @@ const router = new Router({
         {
           path: '/',
           name: 'dashboard',
-          component: DashboardMain
+          component: Courses
         },
         {
           path: 'classroom/:slug',

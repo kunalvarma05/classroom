@@ -19,6 +19,19 @@
       </div>
     </v-container>
 
+    <v-container fluid fill-height v-if="hasEnded">
+      <div>
+        <v-avatar class="white" size="30px">
+          <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
+        </v-avatar>
+        <span class="pl-2">
+            {{course.tutor.name}}
+          </span>
+        <h2>{{session.name}}</h2>
+        <h5>This session has ended.</h5>
+      </div>
+    </v-container>
+
     <div v-if="hasStarted">
       <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
       <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
