@@ -21,9 +21,17 @@ export default {
   },
 
   setUser(user) {
-    window.currentUser = user
+    let userObj = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      photoUrl: user.photoUrl,
+      role: user.role
+    };
 
-    let encodedUser = JSON.stringify(user)
+    window.currentUser = userObj
+
+    let encodedUser = JSON.stringify(userObj)
     window.localStorage.setItem('user', encodedUser)
   },
 
