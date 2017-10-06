@@ -10,6 +10,10 @@ export default {
     return this.db().collection('sessions');
   },
 
+  doc(id) {
+    return this.collection().doc(id);
+  },
+
   all(references = ['course']) {
     return this.collection().get().then((collection) => {
       return FireStore.resolveCollectionItems(collection, references);
@@ -63,5 +67,29 @@ export default {
 
   delete(id) {
     return this.collection().doc(id).delete();
+  },
+
+  start(id) {
+    return new Promise((resolve, reject) => {
+      this.find(id).then((session) => {
+        session.status = "started";
+
+        this.update(id, session).then((sess) => {
+          resolve(sess);
+        });
+      });
+    });
+  },
+
+  end(id) {
+    return new Promise((resolve, reject) => {
+      this.find(id).then((session) => {
+        session.status = "ended";
+
+        this.update(id, session).then((sess) => {
+          resolve(sess);
+        });
+      });
+    });
   }
 }

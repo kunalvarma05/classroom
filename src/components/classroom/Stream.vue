@@ -1,13 +1,15 @@
 <template>
   <div class="stream-page">
     <div class="stream-message" v-if="!room">
-      <h1>Stream</h1>
+      <h2>Stream</h2>
 
-      <v-btn outline round :loading='!accessToken' @click='joinStream'
-             class="cyan--text">
-        <v-icon left>videocam</v-icon>
-        <span>Join Stream</span>
-      </v-btn>
+      <div>
+        <v-btn outline round :loading='!accessToken' @click='joinStream'
+               class="cyan--text">
+          <v-icon left>videocam</v-icon>
+          <span>Join Stream</span>
+        </v-btn>
+      </div>
     </div>
     <div v-if="tutorDisconnected" class="stream-waiting">
       <h4>Don't panic kiddos...</h4>
@@ -30,7 +32,7 @@
 
 <script>
   import Video from "@/lib/Video";
-  import Firebase from '@/lib/Firebase';
+  import sessionSerivce from '../../store/Session';
 
   export default {
     name: 'stream',
@@ -47,10 +49,6 @@
         .then((token) => {
           this.accessToken = token;
         });
-
-      if (!this.userIsTutor) {
-        this.listenForSessionEnd();
-      }
     },
     computed: {
       currentUserId() {
@@ -131,21 +129,22 @@
         document.getElementById('stream-tracks').innerHTML = "";
       },
       endSession() {
-        Firebase.instance().database().ref('/sessions').child(this.courseId).remove();
-        this.room.disconnect();
-      },
-      listenForSessionEnd() {
-        Firebase.instance().database().ref('/sessions').on('child_removed', (snapshot) => {
-          const course_id = snapshot.key;
-
-          if (this.courseId === course_id) {
-            this.room.disconnect();
-            this.sessionEnded = true;
-
-            this.tutorDisconnected = false;
-
-          }
+        this.session.status = "ended";
+        sessionSerivce.update(this.session.id, this.session).then((updatedSession) => {
+          this.session = updatedSession;
+          this.room.disconnect();
         });
+      },
+      sessionEnded() {
+        const course_id = snapshot.key;
+
+        if (this.courseId === course_id) {
+          this.room.disconnect();
+          this.sessionEnded = true;
+
+          this.tutorDisconnected = false;
+
+        }
       }
     }
   }
