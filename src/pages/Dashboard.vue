@@ -70,12 +70,12 @@
               </v-list-tile-action>
               <v-list-tile-title>Dark Mode</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="">
-              <v-list-tile-action>
-                <v-icon>settings</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-title>Settings</v-list-tile-title>
-            </v-list-tile>
+            <!--<v-list-tile @click="">-->
+              <!--<v-list-tile-action>-->
+                <!--<v-icon>settings</v-icon>-->
+              <!--</v-list-tile-action>-->
+              <!--<v-list-tile-title>Settings</v-list-tile-title>-->
+            <!--</v-list-tile>-->
             <v-list-tile @click="logout">
               <v-list-tile-action>
                 <v-icon>exit_to_app</v-icon>
