@@ -21,9 +21,8 @@
 
     <div v-if="hasStarted">
       <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
-      <slides v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
+      <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
       <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
-      <doubts v-show="tabIsActive('doubts')" :course="course" :tutor="tutor"></doubts>
 
       <v-bottom-nav
         :value="true"
@@ -38,17 +37,13 @@
           <span>Stream</span>
           <v-icon>videocam</v-icon>
         </v-btn>
-        <v-btn dark value="slides">
+        <v-btn dark value="slides" v-if="hasSlides">
           <span>Slides</span>
           <v-icon>slideshow</v-icon>
         </v-btn>
         <v-btn dark value="whiteboard">
           <span>Whiteboard</span>
           <v-icon>panorama</v-icon>
-        </v-btn>
-        <v-btn dark value="doubts">
-          <span>Doubts</span>
-          <v-icon>insert_comment</v-icon>
         </v-btn>
       </v-bottom-nav>
     </div>
@@ -79,9 +74,13 @@
       this.fetchSession();
     },
     watch: {
-      session: "subscribeToSession"
+      session: "subscribeToSession",
+      hasStarted: "hideUI"
     },
     computed: {
+      hasSlides() {
+        return this.session.link ? this.session.link : false;
+      },
       hasStarted() {
         return this.session.status === "started";
       },
@@ -151,6 +150,9 @@
           let session = sessionRef.data();
           this.session.status = session.status;
         });
+      },
+      hideUI() {
+        this.$root.$emit('hide-ui');
       }
     },
     components: {
@@ -181,4 +183,7 @@
     display: flex;
     align-items: center;
     height: calc(100vh - 170px);
+
+  .slide-show
+    width: calc(100vw - 150px);
 </style>

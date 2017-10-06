@@ -65,6 +65,15 @@
           data-vv-name="description"
           :disabled="creating"
         ></v-text-field>
+        <v-text-field
+          label="Google Slides Link"
+          v-model="newSession.link"
+          required
+          :error-messages="errors.collect('link')"
+          v-validate="'required'"
+          data-vv-name="link"
+          :disabled="creating"
+        ></v-text-field>
 
         <v-layout row>
           <v-flex>
@@ -133,6 +142,7 @@
         newSession: {
           name: "",
           description: "",
+          link: ""
         },
         showForm: false,
         creating: false
@@ -193,7 +203,7 @@
       },
 
       createSession() {
-        sessionService.create(this.newSession.name, this.newSession.description, this.scheduledDateTime(), this.course.id)
+        sessionService.create(this.newSession.name, this.newSession.description, this.newSession.link, this.scheduledDateTime(), this.course.id)
           .then((session) => {
             this.creating = false;
             this.sessions.unshift(session);

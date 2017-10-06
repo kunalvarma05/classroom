@@ -34,7 +34,7 @@ export default {
     });
   },
 
-  create(name, description, scheduled_at, course_id) {
+  create(name, description, scheduled_at, link, course_id) {
     return new Promise((resolve, reject) => {
       let courseRef = courseService.doc(course_id);
       let sessionRef = this.collection().doc();
@@ -43,6 +43,7 @@ export default {
       let sessionObj = {
         id: sessionId,
         name: name,
+        link: link,
         description: description,
         scheduled_at: scheduled_at,
         status: "scheduled",

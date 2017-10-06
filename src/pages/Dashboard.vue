@@ -29,6 +29,8 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+
+
     <v-toolbar :dark="darkTheme" fixed>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <span class="title">
@@ -71,10 +73,10 @@
               <v-list-tile-title>Dark Mode</v-list-tile-title>
             </v-list-tile>
             <!--<v-list-tile @click="">-->
-              <!--<v-list-tile-action>-->
-                <!--<v-icon>settings</v-icon>-->
-              <!--</v-list-tile-action>-->
-              <!--<v-list-tile-title>Settings</v-list-tile-title>-->
+            <!--<v-list-tile-action>-->
+            <!--<v-icon>settings</v-icon>-->
+            <!--</v-list-tile-action>-->
+            <!--<v-list-tile-title>Settings</v-list-tile-title>-->
             <!--</v-list-tile>-->
             <v-list-tile @click="logout">
               <v-list-tile-action>
@@ -101,7 +103,10 @@
   export default {
     name: 'dashboard',
     created() {
-
+      this.$root.$on('hide-ui', () => {
+        this.drawer = false;
+        this.toolbar = false;
+      });
     },
     data() {
       return {
@@ -109,6 +114,7 @@
         notification: false,
         showNotification: false,
         darkTheme: false,
+        toolbar: true,
         accountMenu: false
       };
     },
