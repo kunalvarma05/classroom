@@ -3,7 +3,7 @@
     <v-container fluid fill-height v-if="!hasStarted && !hasEnded">
       <div>
         <v-avatar class="white" size="30px">
-          <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
+          <img :src="photoUrl" :alt="course.tutor.name">
         </v-avatar>
         <span class="pl-2">
             {{course.tutor.name}}
@@ -105,6 +105,13 @@
       },
       slug() {
         return this.$route.params.slug;
+      },
+      photoUrl() {
+        if (this.tutor) {
+          return this.tutor.photoUrl;
+        }
+
+        return "";
       },
       course() {
         if (this.session) {

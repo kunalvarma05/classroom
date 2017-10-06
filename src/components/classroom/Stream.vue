@@ -19,10 +19,29 @@
       </h6>
     </div>
 
-    <div v-if="room && userIsTutor" class="stream-actions">
-      <h4>The session has started...</h4>
-      <v-btn @click="endSession" class="red">End</v-btn>
+    <div v-if="room && userIsTutor" class="stream-actions container fluid">
+      <v-layout>
+        <v-flex>
+          <h4>The session has started...</h4>
+          <v-btn @click="endSession" class="red">End</v-btn>
+        </v-flex>
+      </v-layout>
     </div>
+    <v-flex v-if="room && userIsTutor" class="container fluid">
+      <h3 class="headline mb-3">
+        Attendees
+      </h3>
+      <v-list>
+        <v-list-tile avatar v-for="student in attendees" :key="student.id" @click="">
+          <v-list-tile-avatar>
+            <img :src="student.photoUrl" :alt="student.name"/>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title v-html="student.name"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-flex>
 
     <div class="stream-video">
       <div id="stream-tracks"></div>
@@ -33,6 +52,7 @@
 <script>
   import Video from "@/lib/Video";
   import sessionSerivce from '../../store/Session';
+  import userSerivce from '../../store/User';
 
   export default {
     name: 'stream',
@@ -40,6 +60,7 @@
     data() {
       return {
         room: false,
+        attendees: [],
         accessToken: false,
         tutorDisconnected: false
       };
@@ -112,6 +133,10 @@
         if (participant.identity === this.tutorId) {
           // Show their video
           this.showTutorVideo(participant);
+        } else {
+          userSerivce.find(participant.identity).then((attendee) => {
+            this.attendees.push(attendee);
+          })
         }
       },
       showTutorVideo(participant) {
