@@ -203,7 +203,7 @@
       },
 
       createSession() {
-        sessionService.create(this.newSession.name, this.newSession.description, this.newSession.link, this.scheduledDateTime(), this.course.id)
+        sessionService.create(this.newSession.name, this.newSession.description, this.scheduledDateTime(), this.newSession.link, this.course.id)
           .then((session) => {
             this.creating = false;
             this.sessions.unshift(session);
