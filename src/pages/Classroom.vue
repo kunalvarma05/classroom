@@ -1,9 +1,9 @@
 <template>
   <div id="classroom">
-    <stream v-show="tabIsActive('stream')"></stream>
-    <slides v-show="tabIsActive('slides')"></slides>
-    <whiteboard v-show="tabIsActive('whiteboard')"></whiteboard>
-    <doubts v-show="tabIsActive('doubts')"></doubts>
+    <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
+    <slides v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
+    <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
+    <doubts v-show="tabIsActive('doubts')" :course="course" :tutor="tutor"></doubts>
 
     <v-bottom-nav
       :value="true"

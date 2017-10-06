@@ -34,6 +34,7 @@
 
   export default {
     name: 'stream',
+    props: ['course', 'tutor'],
     data() {
       return {
         room: false,
@@ -56,13 +57,13 @@
         return this.$currentUser.id;
       },
       courseId() {
-        return this.$route.params.course_id;
+        return this.course.id;
       },
-      courseTutorId() {
-        return this.$route.params.tutor_id;
+      tutorId() {
+        return this.tutor.id;
       },
       userIsTutor() {
-        return this.$currentUser.id === this.courseTutorId;
+        return this.$currentUser.id === this.tutorId;
       },
       sessionStarted() {
         return true;
@@ -103,14 +104,14 @@
       },
       remoteParticipantDisconnected(participant) {
         // If the participant connected is a tutor
-        if (participant.identity === this.courseTutorId) {
+        if (participant.identity === this.tutorId) {
           // Remove their video
           this.removeTutorVideo(participant);
         }
       },
       remoteParticipantConnected(participant) {
         // If the participant connected is a tutor
-        if (participant.identity === this.courseTutorId) {
+        if (participant.identity === this.tutorId) {
           // Show their video
           this.showTutorVideo(participant);
         }

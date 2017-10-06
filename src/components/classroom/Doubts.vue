@@ -6,6 +6,21 @@
 
 <script>
   export default {
-    name: 'doubts'
+    name: 'doubts',
+    props: ['course', 'tutor'],
+    computed: {
+      currentUserId() {
+        return this.$currentUser.id;
+      },
+      courseId() {
+        return this.course.id;
+      },
+      tutorId() {
+        return this.tutor.id;
+      },
+      userIsTutor() {
+        return this.$currentUser.id === this.tutorId;
+      },
+    }
   }
 </script>
