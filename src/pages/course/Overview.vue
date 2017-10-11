@@ -76,8 +76,8 @@
 </template>
 
 <script>
-  import courseService from '@/store/Course';
-  import Utils from "@/lib/Utils";
+  import courseService from '../../store/Course';
+  import Utils from "../../lib/Utils";
 
 
   export default {
@@ -151,8 +151,10 @@
         });
       },
       updateCourse() {
-        courseService.update(this.course.id, this.course).then((course) => {
-          this.course = course;
+        courseService.update(this.course.id, {
+          name: this.course.name,
+          description: this.course.description
+        }).then(() => {
           this.editing = false;
           this.updating = false;
         });

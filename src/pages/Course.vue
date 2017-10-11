@@ -190,15 +190,17 @@
       enroll() {
         this.signingUp = true;
 
-        courseService.enroll(this.course.id, this.$currentUser.id).then(() => {
+        courseService.enroll(this.course.id, this.$currentUser.id).then((course) => {
           this.signingUp = false;
           this.isEnrolled = true;
 
-          if (!Utils.isArray(this.course.students)) {
-            this.course.students = [];
+          if (this.course.students === undefined || !Utils.isArray(this.course.students)) {
+            let updatedCourse = Object.assign({}, course);
+            updatedCourse.students = [this.$currentUser];
+            this.course = updatedCourse;
+          } else {
+            this.course.students.push(this.$currentUser);
           }
-
-          this.course.students.push(this.$currentUser);
         });
       },
       checkEnrollmentStatus() {
