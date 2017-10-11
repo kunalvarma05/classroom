@@ -68,7 +68,8 @@
 
         let user = Object.assign({}, this.user);
         user.role = this.role;
-        userService.create(user.id, user)
+
+        userService.create(user)
           .then((createdUser) => {
             this.$auth.setUser(createdUser);
             this.inProgress = false;
