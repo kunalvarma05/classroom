@@ -1,6 +1,7 @@
 <template>
   <v-app id="homepage" class="home-page text-xs-center fill-height" dark>
-    <v-container fluid>
+    <div class="home-pattern-overlay"></div>
+    <v-container fluid class="inner-wrapper">
       <!-- :alt is an equivalent (shorthand) of writing v-bind:alt -->
       <img src="../assets/images/logo.svg" :alt="title">
       <signup v-if='!loading'/>
@@ -39,4 +40,22 @@
     display: flex
     height: 100%
     align-items: center
+    background: url(/static/homepage.jpg) no-repeat
+    background-size: cover
+    background-position: center center
+
+    .inner-wrapper
+      z-index: 20
+
+    .home-pattern-overlay
+      position: fixed
+      height: 100%
+      width: 100%
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      background-image: linear-gradient(to left, black 0%, #222 100%);
+      opacity: 0.8
+      z-index: 10
 </style>
