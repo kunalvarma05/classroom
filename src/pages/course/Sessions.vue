@@ -17,29 +17,33 @@
     </div>
 
     <div class="card__front" v-show="!showForm">
-      <v-layout v-if="loading" row fill-height align-center fill-width justify-center class="is-flexbox"
-                :class="{'loader-box': loading}">
+
+      <v-layout v-if="loading" row fill-height align-center fill-width justify-center class="is-flexbox">
         <v-progress-circular indeterminate :size="50" class="primary--text"></v-progress-circular>
       </v-layout>
 
-      <v-layout v-if="!loading" row fill-height class="is-flexbox" wrap>
-        <v-flex pa-2 lg6 md6 sm6 xs12 v-for='session in sessions' :key='session.id'>
-          <v-card>
-            <v-card-title primary-title>
-              <h6 class="mb-0">
-                {{session.name}}
-              </h6>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn flat small @click="$router.push({ name: 'classroom', params: { slug: session.id } })">
-                View
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
+      <h6 v-if="!loading && !hasSessions">No sessions have been created yet.</h6>
+
+      <div v-if="hasSessions">
+        <v-layout v-if="!loading" row fill-height class="is-flexbox" wrap>
+          <v-flex pa-2 lg6 md6 sm6 xs12 v-for='session in sessions' :key='session.id'>
+            <v-card>
+              <v-card-title primary-title>
+                <h6 class="mb-0">
+                  {{session.name}}
+                </h6>
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat small @click="$router.push({ name: 'classroom', params: { slug: session.id } })">
+                  View
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </div>
     </div>
 
     <div class="card__back" v-show="showForm">
@@ -154,6 +158,9 @@
       },
       course() {
         return this.$parent.course;
+      },
+      hasSessions() {
+        return Utils.isArray(this.sessions) && this.sessions && this.sessions.length;
       },
       valid() {
         if (this.errors.count() > 0) {
