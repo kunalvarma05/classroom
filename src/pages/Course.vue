@@ -193,6 +193,11 @@
         courseService.enroll(this.course.id, this.$currentUser.id).then(() => {
           this.signingUp = false;
           this.isEnrolled = true;
+
+          if (!Utils.isArray(this.course.students)) {
+            this.course.students = [];
+          }
+
           this.course.students.push(this.$currentUser);
         });
       },
