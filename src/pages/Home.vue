@@ -38,13 +38,14 @@
 <style lang="stylus">
   .home-page
     display: flex
-    height: 100%
     align-items: center
-    background: url(/static/homepage.jpg) no-repeat
+    height: 100%
+    background: url(/static/bg.jpg) no-repeat
     background-size: cover
     background-position: center center
 
     .inner-wrapper
+      position: relative
       z-index: 20
 
     .home-pattern-overlay
@@ -55,7 +56,7 @@
       left: 0
       right: 0
       bottom: 0
-      background-image: linear-gradient(to left, black 0%, #222 100%);
+      background-image: linear-gradient(to top, black 10%, #333 100%)
       opacity: 0.8
       z-index: 10
 </style>
