@@ -31,11 +31,22 @@ export default class BaseStore {
     });
   }
 
-  create(id, docObj) {
+  create(docObj) {
     return new Promise((resolve, reject) => {
-      this.doc(id).set(docObj).then(() => {
-        docObj.id = id;
-        return resolve(docObj);
+      let docRef;
+
+      // If an ID is not assigned
+      if (docObj.id === undefined || !docObj.id) {
+        // Create a new document reference
+        docRef = this.collection().doc();
+        docObj.id = docRef.id;
+      } else {
+        // Fetch the document reference
+        docRef = this.doc(docObj.id);
+      }
+
+      this.doc(docObj.id).set(docObj).then(() => {
+        resolve(docObj);
       });
     });
   }
