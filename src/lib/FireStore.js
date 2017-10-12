@@ -6,6 +6,10 @@ export default class FireStore {
     return Firebase.instance().firestore();
   }
 
+  static storage(){
+    return Firebase.instance().storage()
+  }
+
   static getDocData(doc, defaultValue = null) {
     if (doc.exists) {
       return doc.data();

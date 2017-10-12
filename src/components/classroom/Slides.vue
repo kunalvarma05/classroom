@@ -41,9 +41,17 @@
         return this.$currentUser.id === this.tutorId;
       },
       link() {
-        if (this.$parent.session.link) {
-          let id = this.$parent.session.link;
-          return 'https://docs.google.com/presentation/d/e/' + id + '/embed?start=false&loop=false&delayms=60000'
+        if (this.$parent.session.documentUrl) {
+          let id = this.$parent.session.documentUrl;
+
+
+		// url VARIABLE IS CONSTANT.
+      		var url="http://docs.google.com/gview?url=";
+      		url+=escape(id);
+      		url+="&embedded=true";
+          return url;
+          // return 'https://docs.google.com/presentation/d/e/' + id + '/embed?start=false&loop=false&delayms=60000'
+
         }
 
         return false;

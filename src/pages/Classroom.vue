@@ -92,7 +92,7 @@
     },
     computed: {
       hasSlides() {
-        return this.session.link ? this.session.link : false;
+        return this.session.documentUrl ? this.session.documentUrl : false;
       },
       hasStarted() {
         return this.session.status === "started";

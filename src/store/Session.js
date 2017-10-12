@@ -34,24 +34,30 @@ export default {
     });
   },
 
-  create(name, description, scheduled_at, link, course_id) {
-    return new Promise((resolve, reject) => {
-      let courseRef = courseService.doc(course_id);
-      let sessionRef = this.collection().doc();
-      let sessionId = sessionRef.id;
+  create(name, description, scheduled_at, uploadFile, course_id) {
 
-      let sessionObj = {
-        id: sessionId,
-        name: name,
-        link: link,
-        description: description,
-        scheduled_at: scheduled_at,
-        status: "scheduled",
-        course: courseRef
-      };
+    var obj=this;
+    return FireStore.storage().ref().child('session/'+uploadFile.name).put(uploadFile).then(function(snap){
+      console.log(snap);
 
-      sessionRef.set(sessionObj).then(() => {
-        return resolve(sessionObj);
+      return new Promise((resolve, reject) => {
+        let courseRef = courseService.doc(course_id);
+        let sessionRef = obj.collection().doc();
+        let sessionId = sessionRef.id;
+
+        let sessionObj = {
+          id: sessionId,
+          name: name,
+          description: description,
+          scheduled_at: scheduled_at,
+          status: "scheduled",
+          course: courseRef,
+          documentUrl: snap.downloadURL
+        };
+
+        sessionRef.set(sessionObj).then(() => {
+          return resolve(sessionObj);
+        });
       });
     });
   },
