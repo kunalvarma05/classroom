@@ -21,11 +21,15 @@
 
     <div v-if="room && userIsTutor" class="stream-actions container fluid">
       <v-layout>
-        <v-flex>
-          <h4>The session has started...</h4>
-          <v-btn @click="endSession" error dark>End</v-btn>
+        <v-flex md5>
+          <h5>
+            The session has started...
+            <v-btn @click="endSession" error dark>End</v-btn>
+          </h5>
+          <div id="video-preview"></div>
         </v-flex>
-        <v-flex>
+        <v-spacer></v-spacer>
+        <v-flex md6>
           <h3 class="headline mb-3">
             Attendees
           </h3>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-  import Video from "@/lib/Video";
+  import Video from "../../lib/Video";
   import sessionSerivce from '../../store/Session';
   import userSerivce from '../../store/User';
 
@@ -106,12 +110,23 @@
         return Video.connect(this.accessToken, this.courseId, this.userIsTutor);
       },
       attachRoomHandlers(room) {
+        // Show tutor, their stream preview
+        if (this.userIsTutor) {
+          this.showVideoPreview();
+        }
+
         room.on('participantConnected', this.remoteParticipantConnected);
         room.on('participantDisconnected', this.remoteParticipantDisconnected);
         room.on('disconnected', this.localParticipantDisConnected);
 
         room.participants.forEach(participant => {
           this.remoteParticipantConnected(participant);
+        });
+      },
+      showVideoPreview() {
+        Video.getLocalVideoTrack().then(track => {
+          let localMediaContainer = document.getElementById('video-preview');
+          localMediaContainer.appendChild(track.attach());
         });
       },
       localParticipantDisConnected(room) {
@@ -157,11 +172,15 @@
         this.tutorDisconnected = true;
         document.getElementById('stream-tracks').innerHTML = "";
       },
+      removeVideoPreview() {
+        document.getElementById('video-preview').innerHTML = "";
+      },
       endSession() {
         this.$parent.session.status = "ended";
         sessionSerivce.end(this.$parent.session.id).then((updatedSession) => {
           this.$parent.session = updatedSession;
           this.room.disconnect();
+          this.removeVideoPreview();
           this.sessionEnded = true;
           this.tutorDisconnected = false;
         });
@@ -182,4 +201,13 @@
         transform: rotateY(180deg); // Mirror ;)
         width: auto;
         height: 100%;
+
+  #video-preview
+    width: 100%;
+    height: auto;
+
+    video
+      transform: rotateY(180deg); // Mirror ;)
+      width: 100%;
+      height: auto;
 </style>

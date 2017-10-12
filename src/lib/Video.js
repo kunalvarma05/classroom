@@ -34,4 +34,13 @@ export default class Video {
       });
     })
   }
+
+  static getLocalVideoTrack(options = {}) {
+    return new Promise((resolve, reject) => {
+      TwilioVideo.createLocalVideoTrack(options).then((track) => {
+        resolve(track);
+      });
+    })
+  }
+
 }
