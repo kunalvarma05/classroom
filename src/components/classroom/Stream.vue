@@ -63,6 +63,7 @@
         room: false,
         attendees: [],
         accessToken: false,
+        joining: false,
         tutorDisconnected: false
       };
     },
