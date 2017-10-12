@@ -220,5 +220,7 @@
     height: calc(100vh - 170px);
 
   .slide-show
-    width: calc(100vw - 150px);
+    height: calc(100vh - 50px);
+    width: calc(100vw - 250px);
+    margin-top: 1.5rem;
 </style>

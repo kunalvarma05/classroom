@@ -4,10 +4,10 @@
       <h1>Stream</h1>
 
       <div>
-        <v-btn outline round :loading='!accessToken' @click='joinStream'
+        <v-btn outline round :loading='!accessToken || joining' @click='joinStream'
                class="cyan--text">
-          <v-icon left>videocam</v-icon>
-          <span>Join Stream</span>
+          <v-icon v-if="!joining" left>videocam</v-icon>
+          <span v-if="!joining">Join Stream</span>
         </v-btn>
       </div>
     </div>
@@ -91,9 +91,11 @@
     },
     methods: {
       joinStream() {
+        this.joining = true;
         // Connect to the Room
         this.connect()
           .then((room) => {
+            this.joining = false;
             this.room = room;
             this.attachRoomHandlers(room);
           });

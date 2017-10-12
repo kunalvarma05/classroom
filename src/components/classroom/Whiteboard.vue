@@ -59,15 +59,18 @@
     height: calc(100vh - 170px);
 
   #aww-wrapper
-    min-height: calc(100vh - 170px);
+    height: calc(100vh - 0px) !important;
     position: absolute;
+    left: 0;
+    right: 0;
 
   #aww-toolbar-window
     display: none;
     top: 70px !important;
-    border-radius: 4px;
-    background: #222;
-    max-height: 60%;
+    border-radius: 4px !important;
+    background: #222 !important;
+    max-height: 60% !important;
+    margin: 20px !important;
 
   .aww--overlay
     position: fixed;
