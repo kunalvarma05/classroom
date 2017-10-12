@@ -40,10 +40,14 @@
       userIsTutor() {
         return this.$currentUser.id === this.tutorId;
       },
+      session() {
+        return this.$parent.session ? this.$parent.session : false;
+      },
       link() {
-        if (this.$parent.session.link) {
-          let id = this.$parent.session.link;
-          return 'https://docs.google.com/presentation/d/e/' + id + '/embed?start=false&loop=false&delayms=60000'
+        if (this.session.link) {
+          return this.session.link.replace(/(\/pub)/g, ($1) => {
+            return '/embed';
+          });
         }
 
         return false;
