@@ -71,8 +71,19 @@
         ></v-text-field>
 
         <br />
-        <v-btn raised @click="onPickFile">Upload File</v-btn>
-        <input type="file" style="display: none" @change="onFileUploadClick" ref="fileInput" accept="application/pdf, .ppt, .pptx" >
+        <v-layout row>
+          <v-flex>
+            <v-btn raised @click="onPickFile">Upload File</v-btn>
+            <input type="file" style="display: none" @change="onFileUploadClick" ref="fileInput" accept="application/pdf, .ppt, .pptx" >
+          </v-flex>
+
+          <v-flex>
+            <v-subheader ref="subHead">
+
+            </v-subheader>
+          </v-flex>
+
+        </v-layout>
         <br /> <br />
 
         <!-- uncomment below code for upload link and comment the above to hide file upload -->
@@ -233,7 +244,7 @@
       onFileUploadClick (event) {
         const file = event.target.files
         this.newSession.uploadFile = file[0]
-
+        this.$refs.subHead.innerHTML = this.newSession.uploadFile.name;
       }
     }
   }
