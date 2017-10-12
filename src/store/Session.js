@@ -34,32 +34,23 @@ export class SessionStore extends BaseStore {
   }
 
   subCreate(name, description, scheduled_at, downloadURL, course_id) {
-    return new Promise((resolve, reject) => {
-      let courseRef = courseService.doc(course_id);
-      let sessionRef = this.collection().doc();
-      let sessionId = sessionRef.id;
-
-      let sessionObj = {
-        id: sessionId,
-        name: name,
-        description: description,
-        scheduled_at: scheduled_at,
-        status: "scheduled",
-        course: courseRef,
-        documentUrl: downloadURL
-      };
-
-      sessionRef.set(sessionObj).then(() => {
-        return resolve(sessionObj);
-      });
-    });
+    let courseRef = courseService.doc(course_id);
+    let sessionObj = {
+      name: name,
+      description: description,
+      scheduled_at: scheduled_at,
+      status: "scheduled",
+      course: courseRef,
+      documentUrl: downloadURL
+    };
+    return super.create(sessionObj);
   }
 
   create(name, description, scheduled_at, uploadFile, course_id) {
     if (uploadFile && uploadFile.name) {
       var obj = this;
       return FireStore.storage().ref().child('session/' + uploadFile.name).put(uploadFile).then(function(snap) {
-        obj.subCreate(name, description, scheduled_at, snap.downloadURL, course_id);
+        return obj.subCreate(name, description, scheduled_at, snap.downloadURL, course_id);
       });
     } else {
       return this.subCreate(name, description, scheduled_at, null, course_id);
