@@ -6,8 +6,8 @@
       </v-layout>
     </v-container>
 
-    <v-container fluid fill-height v-if="isReady">
-      <div v-if="isScheduled">
+    <v-container fill-height v-if="isReady" class="pa-0">
+      <v-layout v-if="isScheduled">
         <v-avatar class="white" size="30px">
           <img :src="photoUrl" :alt="tutorName">
         </v-avatar>
@@ -19,9 +19,9 @@
           <h5 v-if="!userIsTutor">Waiting for the tutor to start the session.</h5>
           <v-btn v-if="userIsTutor" primary @click="startSession">Start Session</v-btn>
         </div>
-      </div>
+      </v-layout>
 
-      <div v-if="hasEnded">
+      <v-layout v-if="hasEnded">
         <v-avatar class="white" size="30px">
           <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
         </v-avatar>
@@ -30,8 +30,9 @@
           </span>
         <h2>{{session.name}}</h2>
         <h5>This session has ended.</h5>
-      </div>
-      <div v-if="hasStarted">
+      </v-layout>
+
+      <v-layout v-if="hasStarted">
         <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
         <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
         <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
@@ -58,7 +59,7 @@
             <v-icon>panorama</v-icon>
           </v-btn>
         </v-bottom-nav>
-      </div>
+      </v-layout>
     </v-container>
   </div>
 </template>
@@ -214,6 +215,7 @@
 
   .section-page
     display: flex;
+    width: 100%;
     align-items: center;
     height: calc(100vh - 170px);
 

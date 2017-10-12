@@ -23,25 +23,26 @@
       <v-layout>
         <v-flex>
           <h4>The session has started...</h4>
-          <v-btn @click="endSession" class="red">End</v-btn>
+          <v-btn @click="endSession" error dark>End</v-btn>
+        </v-flex>
+        <v-flex>
+          <h3 class="headline mb-3">
+            Attendees
+          </h3>
+          <h6 v-if="!attendees.length" class="grey--text">No students have joined yet.</h6>
+          <v-list v-if="attendees.length">
+            <v-list-tile avatar v-for="student in attendees" :key="student.id" @click="">
+              <v-list-tile-avatar>
+                <img :src="student.photoUrl" :alt="student.name"/>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title v-html="student.name"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-flex>
       </v-layout>
     </div>
-    <v-flex v-if="room && userIsTutor" class="container fluid">
-      <h3 class="headline mb-3">
-        Attendees
-      </h3>
-      <v-list>
-        <v-list-tile avatar v-for="student in attendees" :key="student.id" @click="">
-          <v-list-tile-avatar>
-            <img :src="student.photoUrl" :alt="student.name"/>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title v-html="student.name"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-flex>
 
     <div class="stream-video">
       <div id="stream-tracks"></div>
