@@ -79,24 +79,11 @@
 
           <v-flex>
             <v-subheader ref="subHead">
-
             </v-subheader>
           </v-flex>
 
         </v-layout>
         <br /> <br />
-
-        <!-- uncomment below code for upload link and comment the above to hide file upload -->
-
-        <!-- <v-text-field
-          label="Google Slides Link"
-          v-model="newSession.link"
-          required
-          :error-messages="errors.collect('link')"
-          v-validate="'required'"
-          data-vv-name="link"
-          :disabled="creating"
-        ></v-text-field> -->
 
         <v-layout row>
           <v-flex>
@@ -195,7 +182,6 @@
         let time = this.scheduled_time;
         let convertedTime = time;
         let dateTime = date + " " + convertedTime;
-        console.log(dateTime);
         return new Date(Date.parse(dateTime));
       },
       allowedDates(date) {
@@ -237,11 +223,11 @@
           });
       },
 
-      onPickFile(){
+      onPickFile() {
         this.$refs.fileInput.click()
       },
 
-      onFileUploadClick (event) {
+      onFileUploadClick(event) {
         const file = event.target.files
         this.newSession.uploadFile = file[0]
         this.$refs.subHead.innerHTML = this.newSession.uploadFile.name;

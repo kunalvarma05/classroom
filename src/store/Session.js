@@ -33,7 +33,7 @@ export class SessionStore extends BaseStore {
     return super.find(id, references);
   }
 
-  subCreate(name, description, scheduled_at,downloadURL, course_id){
+  subCreate(name, description, scheduled_at, downloadURL, course_id) {
     return new Promise((resolve, reject) => {
       let courseRef = courseService.doc(course_id);
       let sessionRef = this.collection().doc();
@@ -56,15 +56,13 @@ export class SessionStore extends BaseStore {
   }
 
   create(name, description, scheduled_at, uploadFile, course_id) {
-
-    if(uploadFile && uploadFile.name){
-      var obj=this;
-      return FireStore.storage().ref().child('session/'+uploadFile.name).put(uploadFile).then(function(snap){
-        console.log(snap);
-        obj.subCreate(name,description,scheduled_at,snap.downloadURL,course_id);
+    if (uploadFile && uploadFile.name) {
+      var obj = this;
+      return FireStore.storage().ref().child('session/' + uploadFile.name).put(uploadFile).then(function(snap) {
+        obj.subCreate(name, description, scheduled_at, snap.downloadURL, course_id);
       });
-    }else{
-      return this.subCreate(name,description,scheduled_at,null,course_id);
+    } else {
+      return this.subCreate(name, description, scheduled_at, null, course_id);
     }
   }
 
@@ -82,27 +80,16 @@ export class SessionStore extends BaseStore {
     return this.collection().doc(id).delete();
   }
 
-//   create(name, description, scheduled_at, link, course_id) {
-//     let courseRef = courseService.doc(course_id);
-//
-//     let sessionObj = {
-//       name: name,
-//       link: link,
-//       description: description,
-//       scheduled_at: scheduled_at,
-//       status: "scheduled",
-//       course: courseRef
-//     };
-//
-//     return super.create(sessionObj);
-//   }
-
   start(id) {
-    return this.update(id, {status: "started"});
+    return this.update(id, {
+      status: "started"
+    });
   }
 
   end(id) {
-    return this.update(id, {status: "ended"});
+    return this.update(id, {
+      status: "ended"
+    });
   }
 }
 
