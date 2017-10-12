@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row>
       <v-flex md4 offset-md4>
-        <v-stepper v-model='step'>
+        <v-stepper v-model='step' class="transparent elevation-0">
           <v-stepper-content step='1'>
             <v-btn primary @click='signIn' :loading='inProgress'>Continue with Google</v-btn>
           </v-stepper-content>
@@ -68,7 +68,8 @@
 
         let user = Object.assign({}, this.user);
         user.role = this.role;
-        userService.create(user.id, user)
+
+        userService.create(user)
           .then((createdUser) => {
             this.$auth.setUser(createdUser);
             this.inProgress = false;

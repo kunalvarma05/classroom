@@ -1,5 +1,5 @@
 <template>
-  <div class="whiteboard-page section-page"
+  <div class="whiteboard-page section-page full-height-page"
        :class="{ 'whiteboard-is-writeable': !started || ($parent.hasStarted && userIsTutor) }">
     <div v-if="!started">
       <h1>Whiteboard</h1>
@@ -58,8 +58,19 @@
   .full-height-page
     height: calc(100vh - 170px);
 
+  #aww-wrapper
+    height: calc(100vh - 0px) !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+
   #aww-toolbar-window
     display: none;
+    top: 70px !important;
+    border-radius: 4px !important;
+    background: #222 !important;
+    max-height: 60% !important;
+    margin: 20px !important;
 
   .aww--overlay
     position: fixed;

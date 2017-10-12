@@ -1,38 +1,38 @@
 import courseService from './Course';
 import FireStore from "../lib/FireStore";
+import BaseStore from "./BaseStore";
 
-export default {
-  db() {
-    return FireStore.instance();
-  },
+export class SessionStore extends BaseStore {
 
-  collection() {
-    return this.db().collection('sessions');
-  },
+  constructor() {
+    super();
+    this.collectionName = "sessions";
+    SessionStore.instanceObj = false;
+  }
 
-  doc(id) {
-    return this.collection().doc(id);
-  },
+  static instance() {
+    if (!SessionStore.instanceObj) {
+      SessionStore.instanceObj = new SessionStore();
+    }
+
+    return SessionStore.instanceObj;
+  }
 
   all(references = ['course']) {
-    return this.collection().get().then((collection) => {
-      return FireStore.resolveCollectionItems(collection, references);
-    });
-  },
+    return super.all(references);
+  }
 
   getAllByCourseID(course_id, references = ['course']) {
     return this.collection().where('course', '==', courseService.doc(course_id))
       .get().then((collection) => {
         return FireStore.resolveCollectionItems(collection, references);
       });
-  },
+  }
 
   find(id, references = ['course']) {
-    return this.collection().doc(id).get().then((doc) => {
-      let docData = FireStore.getDocData(doc);
-      return FireStore.getResolvableForItemReferences(docData, references);
-    });
-  },
+    return super.find(id, references);
+  }
+
 
   create(name, description, scheduled_at, uploadFile, course_id) {
 
@@ -75,28 +75,29 @@ export default {
   delete(id) {
     return this.collection().doc(id).delete();
   },
+  
+//   create(name, description, scheduled_at, link, course_id) {
+//     let courseRef = courseService.doc(course_id);
+//
+//     let sessionObj = {
+//       name: name,
+//       link: link,
+//       description: description,
+//       scheduled_at: scheduled_at,
+//       status: "scheduled",
+//       course: courseRef
+//     };
+//
+//     return super.create(sessionObj);
+//   }
 
   start(id) {
-    return new Promise((resolve, reject) => {
-      this.find(id).then((session) => {
-        session.status = "started";
-
-        this.update(id, session).then((sess) => {
-          resolve(sess);
-        });
-      });
-    });
-  },
+    return this.update(id, {status: "started"});
+  }
 
   end(id) {
-    return new Promise((resolve, reject) => {
-      this.find(id).then((session) => {
-        session.status = "ended";
-
-        this.update(id, session).then((sess) => {
-          resolve(sess);
-        });
-      });
-    });
+    return this.update(id, {status: "ended"});
   }
 }
+
+export default SessionStore.instance();

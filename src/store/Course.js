@@ -1,32 +1,33 @@
 import userService from './User';
-import FireStore from "../lib/FireStore";
 import Utils from "../lib/Utils";
+import BaseStore from "./BaseStore";
+import FireStore from "../lib/FireStore";
 
-export default {
-  db() {
-    return FireStore.instance();
-  },
+class CourseStore extends BaseStore {
+  constructor() {
+    super();
+    this.collectionName = "courses";
+    CourseStore.instanceObj = false;
+  }
 
-  collection() {
-    return this.db().collection('courses');
-  },
+  static instance() {
+    if (!CourseStore.instanceObj) {
+      CourseStore.instanceObj = new CourseStore();
+    }
 
-  doc(id) {
-    return this.collection().doc(id);
-  },
+    return CourseStore.instanceObj;
+  }
 
   all(references = ['tutor']) {
-    return this.collection().get().then((collection) => {
-      return FireStore.resolveCollectionItems(collection, references);
-    });
-  },
+    return super.all(references);
+  }
 
   getAllByTutorID(tutor_id, references = ['tutor']) {
     return this.collection().where('tutor', '==', userService.doc(tutor_id))
       .get().then((collection) => {
         return FireStore.resolveCollectionItems(collection, references);
       });
-  },
+  }
 
   getAllByStudentID(student_id) {
     return new Promise((resolve, reject) => {
@@ -34,138 +35,147 @@ export default {
         resolve(student.courses);
       });
     });
-  },
+  }
 
   find(id, references = ['tutor']) {
-    return this.collection().doc(id).get().then((doc) => {
-      let docData = FireStore.getDocData(doc);
-      return FireStore.getResolvableForItemReferences(docData, references);
-    });
-  },
+    return super.find(id, references);
+  }
 
   create(name, tutor_id) {
-    return new Promise((resolve, reject) => {
-      let tutorRef = userService.doc(tutor_id);
-      let courseRef = this.collection().doc();
-      let courseId = courseRef.id;
-      let alias = Utils.abbreviate(name, 3);
-      let courseObj = {
-        id: courseId,
-        name: name,
-        alias: alias,
-        tutor: tutorRef
-      };
+    let tutorRef = userService.doc(tutor_id);
+    let alias = Utils.abbreviate(name, 3);
 
-      courseRef.set(courseObj).then(() => {
-        return resolve(courseObj);
-      });
-    });
-  },
+    let courseObj = {
+      name: name,
+      alias: alias,
+      tutor: tutorRef
+    };
+
+    return super.create(courseObj);
+  }
 
   update(id, course) {
-    return new Promise((resolve, reject) => {
-      let courseRef = this.collection().doc(id);
-      course.alias = Utils.abbreviate(course.name, 3);
-
-      courseRef.update(course).then(() => {
-        return resolve(course);
-      });
-    });
-  },
-
-  delete(id) {
-    return this.collection().doc(id).delete();
-  },
+    course.alias = Utils.abbreviate(course.name, 3);
+    return super.update(id, course);
+  }
 
   enroll(course_id, student_id) {
     return new Promise((resolve, reject) => {
+      // Student Reference
       let studentRef = userService.doc(student_id);
+      // Find the Course
       this.find(course_id, []).then((course) => {
+        // Students already enrolled in the course
         let courseStudents = course.students;
 
+        // No students. Initialize
         if (!courseStudents || !courseStudents.length) {
           courseStudents = [];
         }
 
+        // Add the student to the course
         courseStudents.push(studentRef);
+
+        // Update the reference
         course.students = courseStudents;
 
+        // Update the course with the new details
         this.update(course_id, course).then((course) => {
+          // Course reference
           let courseRef = this.doc(course_id);
 
-          // Add the course to the list of the student's courses
+          // Find the Student (User)
           userService.find(student_id, []).then((student) => {
+            // Courses the student is already enrolled in
             let studentCourses = student.courses;
 
+            // No courses. Initialize
             if (!studentCourses || !studentCourses.length) {
               studentCourses = [];
             }
 
+            // Add the course to the list of the student's courses
             studentCourses.push(courseRef);
+            // Update the reference
             student.courses = studentCourses;
 
+            // Update the Student
             userService.update(student_id, student).then((user) => {
+              // Resolve the updated course
               resolve(course);
             })
           });
         });
       });
     });
-  },
+  }
 
   unroll(course_id, student_id) {
     return new Promise((resolve, reject) => {
+      // Student reference
       let studentRef = userService.doc(student_id);
+
+      // Find the Course
       this.find(course_id, []).then((course) => {
+        // Students already enrolled in the course
         let courseStudents = course.students;
 
-        if (!courseStudents || !courseStudents.length) {
-          courseStudents = [];
+        if (courseStudents && courseStudents.length) {
+          // Filter and remove the student
+          course.students = courseStudents.filter((student) => {
+            return student.id !== student_id;
+          });
         }
 
-        // Remove the student
-        course.students = courseStudents.filter((student) => {
-          return student.id !== student_id;
-        });
-
+        // Update the Course
         this.update(course_id, course).then((course) => {
+          // Course Reference
           let courseRef = this.doc(course_id);
 
-          // Add the course to the list of the student's courses
+          // Find the Student (User)
           userService.find(student_id, []).then((student) => {
+            // Courses the student is enrolled in
             let studentCourses = student.courses;
 
-            if (!studentCourses || !studentCourses.length) {
-              studentCourses = [];
+            if (studentCourses && studentCourses.length) {
+              // Filter and Remove the course
+              student.courses = studentCourses.filter((course) => {
+                return course.id !== course_id;
+              });
             }
 
-            // Remove the student
-            student.courses = studentCourses.filter((course) => {
-              return course.id !== course_id;
-            });
-
+            // Update the User
             userService.update(student_id, student).then((user) => {
+              // Resolve the updated Course
               resolve(course);
             })
           });
         });
       });
     });
-  },
+  }
 
   studentIsEnrolled(course_id, student_id) {
     return new Promise((resolve, reject) => {
+      // Find the Course, with the reference
+      // to all it's students resolved.
       this.find(course_id, ['students']).then((course) => {
-        let retVal = false;
+        let isEnrolled = false;
 
+        // Find the Student in the list of enrolled students
         if (course.students && course.students.length) {
-          retVal = course.students.some((student) => {
+          // Search for the Student in the list
+          isEnrolled = course.students.some((student) => {
             return student.id === student_id;
           });
         }
 
-        resolve(retVal);
+        // Resolve
+        resolve(isEnrolled);
       });
     });
   }
+
 }
+
+export default CourseStore.instance();

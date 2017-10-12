@@ -1,26 +1,27 @@
 <template>
   <div id="classroom">
-    <v-container fluid fill-height v-if="!hasStarted && !hasEnded">
-      <div>
+    <v-container fluid fill-height v-if="!isReady">
+      <v-layout row fill-height align-center fill-width justify-center class="is-flexbox">
+        <v-progress-circular indeterminate :size="50" class="primary--text"></v-progress-circular>
+      </v-layout>
+    </v-container>
+
+    <v-container fill-height v-if="isReady" class="pa-0">
+      <v-layout v-if="isScheduled">
         <v-avatar class="white" size="30px">
-          <img :src="photoUrl" :alt="course.tutor.name">
+          <img :src="photoUrl" :alt="tutorName">
         </v-avatar>
         <span class="pl-2">
-            {{course.tutor.name}}
+            {{tutorName}}
           </span>
         <h2>{{session.name}}</h2>
-        <div v-if="!hasStarted && !hasEnded">
+        <div>
           <h5 v-if="!userIsTutor">Waiting for the tutor to start the session.</h5>
           <v-btn v-if="userIsTutor" primary @click="startSession">Start Session</v-btn>
         </div>
-        <div v-if="hasEnded">
-          <h5>This session has ended.</h5>
-        </div>
-      </div>
-    </v-container>
+      </v-layout>
 
-    <v-container fluid fill-height v-if="hasEnded">
-      <div>
+      <v-layout v-if="hasEnded">
         <v-avatar class="white" size="30px">
           <img :src="course.tutor.photoUrl" :alt="course.tutor.name">
         </v-avatar>
@@ -29,37 +30,37 @@
           </span>
         <h2>{{session.name}}</h2>
         <h5>This session has ended.</h5>
-      </div>
+      </v-layout>
+
+      <v-layout v-if="hasStarted">
+        <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
+        <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
+        <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
+
+        <v-bottom-nav
+          :value="true"
+          :active.sync="activeTab"
+          :class="{
+          'cyan': tabIsActive('stream'),
+          'blue': tabIsActive('slides'),
+          'pink': tabIsActive('whiteboard'),
+          'blue-grey': tabIsActive('doubts')
+        }">
+          <v-btn dark value="stream">
+            <span>Stream</span>
+            <v-icon>videocam</v-icon>
+          </v-btn>
+          <v-btn dark value="slides" v-if="hasSlides">
+            <span>Slides</span>
+            <v-icon>slideshow</v-icon>
+          </v-btn>
+          <v-btn dark value="whiteboard">
+            <span>Whiteboard</span>
+            <v-icon>panorama</v-icon>
+          </v-btn>
+        </v-bottom-nav>
+      </v-layout>
     </v-container>
-
-    <div v-if="hasStarted">
-      <stream v-show="tabIsActive('stream')" :course="course" :tutor="tutor"></stream>
-      <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
-      <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
-
-      <v-bottom-nav
-        :value="true"
-        :active.sync="activeTab"
-        :class="{
-        'cyan': tabIsActive('stream'),
-        'blue': tabIsActive('slides'),
-        'pink': tabIsActive('whiteboard'),
-        'blue-grey': tabIsActive('doubts')
-      }">
-        <v-btn dark value="stream">
-          <span>Stream</span>
-          <v-icon>videocam</v-icon>
-        </v-btn>
-        <v-btn dark value="slides" v-if="hasSlides">
-          <span>Slides</span>
-          <v-icon>slideshow</v-icon>
-        </v-btn>
-        <v-btn dark value="whiteboard">
-          <span>Whiteboard</span>
-          <v-icon>panorama</v-icon>
-        </v-btn>
-      </v-bottom-nav>
-    </div>
   </div>
 </template>
 
@@ -91,8 +92,14 @@
       hasStarted: "hideUI"
     },
     computed: {
+      isReady() {
+        return this.session && this.course && this.tutor;
+      },
       hasSlides() {
         return this.session.documentUrl ? this.session.documentUrl : false;
+      },
+      isScheduled() {
+        return this.session.status === "scheduled";
       },
       hasStarted() {
         return this.session.status === "started";
@@ -109,6 +116,13 @@
       photoUrl() {
         if (this.tutor) {
           return this.tutor.photoUrl;
+        }
+
+        return "";
+      },
+      tutorName() {
+        if (this.tutor) {
+          return this.tutor.name;
         }
 
         return "";
@@ -201,9 +215,12 @@
 
   .section-page
     display: flex;
+    width: 100%;
     align-items: center;
     height: calc(100vh - 170px);
 
   .slide-show
-    width: calc(100vw - 150px);
+    height: calc(100vh - 50px);
+    width: calc(100vw - 250px);
+    margin-top: 1.5rem;
 </style>
