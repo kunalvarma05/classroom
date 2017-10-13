@@ -37,6 +37,8 @@
         <slides v-if="hasSlides" v-show="tabIsActive('slides')" :course="course" :tutor="tutor"></slides>
         <whiteboard v-show="tabIsActive('whiteboard')" :course="course" :tutor="tutor"></whiteboard>
 
+        <doubts v-show="tabIsActive('doubts')" :course="course" :tutor="tutor"></doubts>
+
         <v-bottom-nav
           :value="true"
           :active.sync="activeTab"
@@ -56,6 +58,10 @@
           </v-btn>
           <v-btn dark value="whiteboard">
             <span>Whiteboard</span>
+            <v-icon>panorama</v-icon>
+          </v-btn>
+          <v-btn dark value="doubts">
+            <span>Doubts</span>
             <v-icon>panorama</v-icon>
           </v-btn>
         </v-bottom-nav>

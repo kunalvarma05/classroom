@@ -1,4 +1,5 @@
 import courseService from './Course';
+import userService from './User';
 import FireStore from "../lib/FireStore";
 import BaseStore from "./BaseStore";
 
@@ -55,6 +56,36 @@ export class SessionStore extends BaseStore {
     } else {
       return this.subCreate(name, description, scheduled_at, null, course_id);
     }
+  }
+
+  createDoubt(question,user_id,session,cb) {
+      let userRef=userService.doc(user_id);
+      let doubtObj={
+        question:question,
+        status:false,
+        user:userRef
+      };
+      let sessionRef = this.doc(session.id);
+      let obj=this;
+      this.find(sessionRef.id).then(function(data){
+        if(data['doubt']){
+          console.log('inside if data');
+          data['doubt'].push(doubtObj);
+          console.log('inside if session');
+          session['doubt'].push(doubtObj);
+        }else{
+          data['doubt']=[];
+          session['doubt']=[];
+          console.log('inside else data');
+          data['doubt'].push(doubtObj);
+          console.log('inside else session');
+          session['doubt'].push(doubtObj);
+          console.log('inside else after session');
+        }
+        obj.update(session.id,data);
+        cb(session);
+      });
+
   }
 
   update(id, session) {
