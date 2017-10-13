@@ -8,16 +8,18 @@
 
     <v-container fill-height v-if="isReady" class="pa-0">
       <v-layout v-if="isScheduled">
-        <v-avatar class="white" size="30px">
-          <img :src="photoUrl" :alt="tutorName">
-        </v-avatar>
-        <span class="pl-2">
+        <div>
+          <v-avatar class="white" size="30px">
+            <img :src="photoUrl" :alt="tutorName">
+          </v-avatar>
+          <span class="pl-2">
             {{tutorName}}
           </span>
-        <h2>{{session.name}}</h2>
-        <div>
-          <h5 v-if="!userIsTutor">Waiting for the tutor to start the session.</h5>
-          <v-btn v-if="userIsTutor" primary @click="startSession">Start Session</v-btn>
+          <h2>{{session.name}}</h2>
+          <div>
+            <h5 v-if="!userIsTutor">Waiting for the tutor to start the session.</h5>
+            <v-btn v-if="userIsTutor" primary @click="startSession">Start Session</v-btn>
+          </div>
         </div>
       </v-layout>
 
