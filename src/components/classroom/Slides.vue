@@ -44,10 +44,14 @@
         return this.$parent.session ? this.$parent.session : false;
       },
       link() {
-        if (this.session.link) {
-          return this.session.link.replace(/(\/pub)/g, ($1) => {
-            return '/embed';
-          });
+        if (this.$parent.session.documentUrl) {
+          let id = this.$parent.session.documentUrl;
+
+          // url VARIABLE IS CONSTANT.
+          var url = "http://docs.google.com/gview?url=";
+          url += escape(id);
+          url += "&embedded=true";
+          return url;
         }
 
         return false;

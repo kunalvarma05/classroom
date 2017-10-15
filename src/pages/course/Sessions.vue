@@ -69,15 +69,21 @@
           data-vv-name="description"
           :disabled="creating"
         ></v-text-field>
-        <v-text-field
-          label="Google Slides Link"
-          v-model="newSession.link"
-          required
-          :error-messages="errors.collect('link')"
-          v-validate="'required'"
-          data-vv-name="link"
-          :disabled="creating"
-        ></v-text-field>
+
+        <br />
+        <v-layout row>
+          <v-flex>
+            <v-btn raised @click="onPickFile">Upload File</v-btn>
+            <input type="file" style="display: none" @change="onFileUploadClick" ref="fileInput" accept="application/pdf, .ppt, .pptx" >
+          </v-flex>
+
+          <v-flex>
+            <v-subheader ref="subHead">
+            </v-subheader>
+          </v-flex>
+
+        </v-layout>
+        <br /> <br />
 
         <v-layout row>
           <v-flex>
@@ -146,7 +152,7 @@
         newSession: {
           name: "",
           description: "",
-          link: ""
+          uploadFile: null
         },
         showForm: false,
         creating: false
@@ -176,7 +182,6 @@
         let time = this.scheduled_time;
         let convertedTime = time;
         let dateTime = date + " " + convertedTime;
-        console.log(dateTime);
         return new Date(Date.parse(dateTime));
       },
       allowedDates(date) {
@@ -210,12 +215,22 @@
       },
 
       createSession() {
-        sessionService.create(this.newSession.name, this.newSession.description, this.scheduledDateTime(), this.newSession.link, this.course.id)
+        sessionService.create(this.newSession.name, this.newSession.description, this.scheduledDateTime(), this.newSession.uploadFile, this.course.id)
           .then((session) => {
             this.creating = false;
             this.sessions.unshift(session);
             this.showForm = false;
           });
+      },
+
+      onPickFile() {
+        this.$refs.fileInput.click()
+      },
+
+      onFileUploadClick(event) {
+        const file = event.target.files
+        this.newSession.uploadFile = file[0]
+        this.$refs.subHead.innerHTML = this.newSession.uploadFile.name;
       }
     }
   }
