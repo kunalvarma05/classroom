@@ -10,7 +10,7 @@ npm install
 
 # Clone the env file
 # And update the contents
-cp env.example.js env.js
+cp src/env.example.js src/env.js
 
 # serve with hot reload at localhost:8080
 npm run dev
